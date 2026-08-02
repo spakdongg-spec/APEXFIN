@@ -1,0 +1,150 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/apexfin/apexfin/contracts/expectations.schema.json",
+  "title": "APEXFIN quality expectations",
+  "description": "Per-source and per-symbol thresholds the six quality checks measure against. Every threshold here encodes a judgement about a specific dataset; a fork must be able to change all of them without touching Python. The `defaults` block is mandatory and every numeric key in it must be explicit -- the load path raises ConfigError when one is missing (O-09).",
+  "type": "object",
+  "required": ["defaults", "sources"],
+  "additionalProperties": false,
+  "properties": {
+    "version": { "type": "integer", "const": 1 },
+    "defaults": {
+      "type": "object",
+      "description": "Applied to any source that omits a key. Defaults exist to keep the file short, not to excuse an undeclared source: a series with no entry under `sources` is a load-time error (O-09).",
+      "required": [
+        "max_lag_trading_days",
+        "completeness_window_days",
+        "max_missing_trading_days",
+        "max_gap_trading_days"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "frequency": {
+          "type": "string",
+          "enum": ["daily", "weekly", "monthly"],
+          "description": "Expected publication cadence. Drives which calendar days the completeness and continuity checks require."
+        },
+        "max_lag_trading_days": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 250,
+          "description": "How many TRADING days the latest event may lag today before the freshness check fires. Trading days are the only unit in this file (O-07); there is deliberately no hour-based key, and adding one would put two incompatible units on the same dashboard."
+        },
+        "completeness_window_days": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 750,
+          "description": "Length of the trailing window the completeness check counts observations in. Zero disables the window."
+        },
+        "max_missing_trading_days": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 250,
+          "description": "How many trading days inside the completeness window may have no observation."
+        },
+        "max_gap_trading_days": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 250,
+          "description": "Longest run of consecutive missing trading days the continuity check tolerates. Distinct from max_missing: twenty scattered holes and one twenty-day blackout are different failures."
+        },
+        "expects_secondary": {
+          "type": "boolean",
+          "description": "Whether value_secondary (volume, for an OHLCV series) must be present. Feeds the completeness factor of quality_score."
+        },
+        "value_min": {
+          "type": ["number", "null"],
+          "description": "Lower bound for the range check. Null means unbounded. A price series should set 0 here so a negative close is caught rather than charted."
+        },
+        "value_max": {
+          "type": ["number", "null"],
+          "description": "Upper bound for the range check. Null means unbounded."
+        }
+      }
+    },
+    "sources": {
+      "type": "object",
+      "description": "Keyed by source name, matching `name` in sources.yaml. Every key maps to a source_entry; a configured series whose source is absent here is a load-time error (O-09).",
+      "minProperties": 1,
+      "additionalProperties": { "$ref": "#/$defs/source_entry" }
+    }
+  },
+  "$defs": {
+    "source_entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "frequency": {
+          "type": "string",
+          "enum": ["daily", "weekly", "monthly"],
+          "description": "Expected publication cadence. Drives which calendar days the completeness and continuity checks require."
+        },
+        "max_lag_trading_days": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 250,
+          "description": "How many TRADING days the latest event may lag today before the freshness check fires."
+        },
+        "completeness_window_days": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 750,
+          "description": "Length of the trailing window the completeness check counts observations in. Zero disables the window."
+        },
+        "max_missing_trading_days": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 250,
+          "description": "How many trading days inside the completeness window may have no observation."
+        },
+        "max_gap_trading_days": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 250,
+          "description": "Longest run of consecutive missing trading days the continuity check tolerates."
+        },
+        "expects_secondary": {
+          "type": "boolean",
+          "description": "Whether value_secondary (volume, for an OHLCV series) must be present. Feeds the completeness factor of quality_score."
+        },
+        "value_min": {
+          "type": ["number", "null"],
+          "description": "Lower bound for the range check. Null means unbounded."
+        },
+        "value_max": {
+          "type": ["number", "null"],
+          "description": "Upper bound for the range check. Null means unbounded."
+        },
+        "symbols": {
+          "type": "object",
+          "description": "Per-symbol overrides, keyed by symbol id. Each value is the same shape as a source_entry and overrides the source-level values."
+        }
+      }
+    }
+  },
+  "examples": [
+    {
+      "version": 1,
+      "defaults": {
+        "frequency": "daily",
+        "max_lag_trading_days": 2,
+        "completeness_window_days": 20,
+        "max_missing_trading_days": 0,
+        "max_gap_trading_days": 1,
+        "expects_secondary": false
+      },
+      "sources": {
+        "fixture_equity": {
+          "max_lag_trading_days": 1,
+          "expects_secondary": true,
+          "value_min": 0
+        },
+        "fixture_macro": {
+          "max_lag_trading_days": 5,
+          "value_min": -5,
+          "value_max": 20
+        }
+      }
+    }
+  ]
+}

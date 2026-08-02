@@ -1,0 +1,538 @@
+{
+  "generated_at": "2026-08-02T14:03:00+08:00",
+  "run_id": "run_20260802_140300",
+  "gate": {
+    "verdict": "DEGRADED",
+    "verdict_label": "降级",
+    "icon_id": "alert-triangle",
+    "tone": "warn",
+    "summary": "fred/cpi 完整性检查降级，其余数据源通过；看板仍可参考，建议重跑采集。",
+    "sources": [
+      {
+        "source_name": "yahoo/equity",
+        "state": "healthy",
+        "label_text": "正常",
+        "icon_id": "check-circle-2",
+        "tone": "ok"
+      },
+      {
+        "source_name": "fred/cpi",
+        "state": "degraded",
+        "label_text": "降级",
+        "icon_id": "alert-triangle",
+        "tone": "warn"
+      },
+      {
+        "source_name": "fred/new",
+        "state": "unknown",
+        "label_text": "未知",
+        "icon_id": "circle-dashed",
+        "tone": "muted"
+      }
+    ]
+  },
+  "quality_matrix": {
+    "checks": [
+      {
+        "key": "fresh",
+        "label_zh": "新鲜度",
+        "label_en": "FRESH"
+      },
+      {
+        "key": "compl",
+        "label_zh": "完整性",
+        "label_en": "COMPL"
+      },
+      {
+        "key": "dup",
+        "label_zh": "重复性",
+        "label_en": "DUP"
+      },
+      {
+        "key": "consist",
+        "label_zh": "一致性",
+        "label_en": "CONSIST"
+      },
+      {
+        "key": "contin",
+        "label_zh": "连续性",
+        "label_en": "CONTIN"
+      },
+      {
+        "key": "range",
+        "label_zh": "合理性",
+        "label_en": "RANGE"
+      }
+    ],
+    "rows": [
+      {
+        "source_name": "yahoo/equity",
+        "cells": {
+          "fresh": {
+            "state": "healthy",
+            "cell_value": "healthy",
+            "icon_id": "check-circle-2",
+            "cell_tooltip": "src · healthy（演示）"
+          },
+          "compl": {
+            "state": "healthy",
+            "cell_value": "healthy",
+            "icon_id": "check-circle-2",
+            "cell_tooltip": "src · healthy（演示）"
+          },
+          "dup": {
+            "state": "healthy",
+            "cell_value": "healthy",
+            "icon_id": "check-circle-2",
+            "cell_tooltip": "src · healthy（演示）"
+          },
+          "consist": {
+            "state": "healthy",
+            "cell_value": "healthy",
+            "icon_id": "check-circle-2",
+            "cell_tooltip": "src · healthy（演示）"
+          },
+          "contin": {
+            "state": "healthy",
+            "cell_value": "healthy",
+            "icon_id": "check-circle-2",
+            "cell_tooltip": "src · healthy（演示）"
+          },
+          "range": {
+            "state": "healthy",
+            "cell_value": "healthy",
+            "icon_id": "check-circle-2",
+            "cell_tooltip": "src · healthy（演示）"
+          }
+        },
+        "pass_count": 6,
+        "total": 6,
+        "rate": 1.0,
+        "rate_state": "ok"
+      },
+      {
+        "source_name": "yahoo/index",
+        "cells": {
+          "fresh": {
+            "state": "healthy",
+            "cell_value": "healthy",
+            "icon_id": "check-circle-2",
+            "cell_tooltip": "src · healthy（演示）"
+          },
+          "compl": {
+            "state": "healthy",
+            "cell_value": "healthy",
+            "icon_id": "check-circle-2",
+            "cell_tooltip": "src · healthy（演示）"
+          },
+          "dup": {
+            "state": "healthy",
+            "cell_value": "healthy",
+            "icon_id": "check-circle-2",
+            "cell_tooltip": "src · healthy（演示）"
+          },
+          "consist": {
+            "state": "healthy",
+            "cell_value": "healthy",
+            "icon_id": "check-circle-2",
+            "cell_tooltip": "src · healthy（演示）"
+          },
+          "contin": {
+            "state": "healthy",
+            "cell_value": "healthy",
+            "icon_id": "check-circle-2",
+            "cell_tooltip": "src · healthy（演示）"
+          },
+          "range": {
+            "state": "healthy",
+            "cell_value": "healthy",
+            "icon_id": "check-circle-2",
+            "cell_tooltip": "src · healthy（演示）"
+          }
+        },
+        "pass_count": 6,
+        "total": 6,
+        "rate": 1.0,
+        "rate_state": "ok"
+      },
+      {
+        "source_name": "fred/rates",
+        "cells": {
+          "fresh": {
+            "state": "healthy",
+            "cell_value": "healthy",
+            "icon_id": "check-circle-2",
+            "cell_tooltip": "src · healthy（演示）"
+          },
+          "compl": {
+            "state": "degraded",
+            "cell_value": "degraded",
+            "icon_id": "alert-triangle",
+            "cell_tooltip": "src · degraded（演示）"
+          },
+          "dup": {
+            "state": "healthy",
+            "cell_value": "healthy",
+            "icon_id": "check-circle-2",
+            "cell_tooltip": "src · healthy（演示）"
+          },
+          "consist": {
+            "state": "healthy",
+            "cell_value": "healthy",
+            "icon_id": "check-circle-2",
+            "cell_tooltip": "src · healthy（演示）"
+          },
+          "contin": {
+            "state": "healthy",
+            "cell_value": "healthy",
+            "icon_id": "check-circle-2",
+            "cell_tooltip": "src · healthy（演示）"
+          },
+          "range": {
+            "state": "healthy",
+            "cell_value": "healthy",
+            "icon_id": "check-circle-2",
+            "cell_tooltip": "src · healthy（演示）"
+          }
+        },
+        "pass_count": 5,
+        "total": 6,
+        "rate": 0.8333333333333334,
+        "rate_state": "warn"
+      },
+      {
+        "source_name": "fred/cpi",
+        "cells": {
+          "fresh": {
+            "state": "degraded",
+            "cell_value": "degraded",
+            "icon_id": "alert-triangle",
+            "cell_tooltip": "src · degraded（演示）"
+          },
+          "compl": {
+            "state": "degraded",
+            "cell_value": "degraded",
+            "icon_id": "alert-triangle",
+            "cell_tooltip": "src · degraded（演示）"
+          },
+          "dup": {
+            "state": "healthy",
+            "cell_value": "healthy",
+            "icon_id": "check-circle-2",
+            "cell_tooltip": "src · healthy（演示）"
+          },
+          "consist": {
+            "state": "healthy",
+            "cell_value": "healthy",
+            "icon_id": "check-circle-2",
+            "cell_tooltip": "src · healthy（演示）"
+          },
+          "contin": {
+            "state": "healthy",
+            "cell_value": "healthy",
+            "icon_id": "check-circle-2",
+            "cell_tooltip": "src · healthy（演示）"
+          },
+          "range": {
+            "state": "healthy",
+            "cell_value": "healthy",
+            "icon_id": "check-circle-2",
+            "cell_tooltip": "src · healthy（演示）"
+          }
+        },
+        "pass_count": 4,
+        "total": 6,
+        "rate": 0.6666666666666666,
+        "rate_state": "warn"
+      }
+    ]
+  },
+  "health_rows": [
+    {
+      "source_name": "yahoo/equity",
+      "symbol": "AAPL",
+      "state": "healthy",
+      "label_text": "正常",
+      "icon_id": "check-circle-2",
+      "tone": "ok",
+      "lag_trading_days": 0,
+      "max_lag_trading_days": 1,
+      "freshness": {
+        "bar_value": 0,
+        "bar_max": 1,
+        "overdue": false,
+        "label": "阈值 1 交易日 · 余 1"
+      },
+      "last_event_date": "2026-07-31",
+      "last_event_label": "07-31（周五）",
+      "note": null
+    },
+    {
+      "source_name": "fred/cpi",
+      "symbol": "USCPI",
+      "state": "degraded",
+      "label_text": "降级",
+      "icon_id": "alert-triangle",
+      "tone": "warn",
+      "lag_trading_days": 2,
+      "max_lag_trading_days": 1,
+      "freshness": {
+        "bar_value": 1,
+        "bar_max": 1,
+        "overdue": true,
+        "label": "阈值 1 交易日 · 超 1"
+      },
+      "last_event_date": "2026-07-29",
+      "last_event_label": "07-29（周三）",
+      "note": "CPI 当月值缺失，使用 T-1 估算。"
+    },
+    {
+      "source_name": "fred/new",
+      "symbol": "NEW",
+      "state": "unknown",
+      "label_text": "未知",
+      "icon_id": "circle-dashed",
+      "tone": "muted",
+      "lag_trading_days": null,
+      "max_lag_trading_days": 1,
+      "freshness": null,
+      "last_event_date": null,
+      "last_event_label": null,
+      "note": "从未采集（建库后首跑）。"
+    }
+  ],
+  "steps": [
+    {
+      "step_name": "collect",
+      "tier": "risk_essential",
+      "tier_state": "ok",
+      "status": "ok",
+      "status_label": "成功",
+      "icon_id": "check-circle-2",
+      "duration_s": 12.4,
+      "duration_label": "12.4 秒",
+      "ran_at": "14:01",
+      "note": null
+    },
+    {
+      "step_name": "validate",
+      "tier": "support",
+      "tier_state": "warn",
+      "status": "running",
+      "status_label": "运行中",
+      "icon_id": "loader",
+      "duration_s": null,
+      "duration_label": null,
+      "ran_at": null,
+      "note": null
+    },
+    {
+      "step_name": "publish",
+      "tier": "support",
+      "tier_state": "warn",
+      "status": "skipped",
+      "status_label": "跳过",
+      "icon_id": "circle-dashed",
+      "duration_s": 0.0,
+      "duration_label": "0.0 秒",
+      "ran_at": "14:03",
+      "note": null
+    }
+  ],
+  "decisions": [
+    {
+      "decision_id": "d-001",
+      "symbol": "AAPL",
+      "direction": "up",
+      "direction_label": "看多",
+      "rationale": "近 5 交易日收盘抬升，动量信号为正；样本量小，仅作演示，不构成投资建议。",
+      "score": 0.62,
+      "as_of": "2026-07-31"
+    },
+    {
+      "decision_id": "d-002",
+      "symbol": "USCPI",
+      "direction": "flat",
+      "direction_label": "中性",
+      "rationale": "最新 CPI 缺失，信号不足，输出 insufficient_data。",
+      "score": 0.0,
+      "as_of": "2026-07-29"
+    }
+  ],
+  "charts": [
+    {
+      "chart_id": "price-AAPL",
+      "title": "AAPL 日K（演示）",
+      "kind": "candlestick",
+      "icon_id": "candlestick-chart",
+      "option": {
+        "xAxis": {
+          "type": "category",
+          "data": [
+            "07-25",
+            "07-28",
+            "07-29",
+            "07-30",
+            "07-31"
+          ]
+        },
+        "yAxis": {
+          "scale": true
+        },
+        "series": [
+          {
+            "type": "candlestick",
+            "data": [
+              [
+                212.1,
+                214.5,
+                211.0,
+                214.2
+              ],
+              [
+                214.2,
+                215.0,
+                213.1,
+                213.8
+              ],
+              [
+                213.8,
+                216.2,
+                213.5,
+                215.9
+              ],
+              [
+                215.9,
+                216.0,
+                214.0,
+                214.3
+              ],
+              [
+                214.3,
+                217.8,
+                214.1,
+                217.5
+              ]
+            ]
+          }
+        ]
+      },
+      "fallback_columns": [
+        "日期",
+        "开盘",
+        "最高",
+        "最低",
+        "收盘"
+      ],
+      "fallback_rows": [
+        [
+          "07-25",
+          212.1,
+          214.5,
+          211.0,
+          214.2
+        ],
+        [
+          "07-28",
+          214.2,
+          215.0,
+          213.1,
+          213.8
+        ],
+        [
+          "07-29",
+          213.8,
+          216.2,
+          213.5,
+          215.9
+        ],
+        [
+          "07-30",
+          215.9,
+          216.0,
+          214.0,
+          214.3
+        ],
+        [
+          "07-31",
+          214.3,
+          217.8,
+          214.1,
+          217.5
+        ]
+      ]
+    },
+    {
+      "chart_id": "macro-cpi",
+      "title": "美国 CPI 同比（演示）",
+      "kind": "macro",
+      "icon_id": "line-chart",
+      "option": {
+        "xAxis": {
+          "type": "category",
+          "data": [
+            "03月",
+            "04月",
+            "05月",
+            "06月",
+            "07月"
+          ]
+        },
+        "yAxis": {},
+        "series": [
+          {
+            "type": "line",
+            "data": [
+              3.2,
+              3.4,
+              3.3,
+              3.1,
+              3.0
+            ],
+            "endLabel": {
+              "show": true
+            }
+          }
+        ]
+      },
+      "fallback_columns": [
+        "月份",
+        "CPI 同比(%)"
+      ],
+      "fallback_rows": [
+        [
+          "03月",
+          3.2
+        ],
+        [
+          "04月",
+          3.4
+        ],
+        [
+          "05月",
+          3.3
+        ],
+        [
+          "06月",
+          3.1
+        ],
+        [
+          "07月",
+          3.0
+        ]
+      ]
+    }
+  ],
+  "notices": [
+    {
+      "level": "warn",
+      "icon_id": "alert-triangle",
+      "text": "fred/cpi 完整性检查降级：当月值缺失，已使用 T-1 估算。重跑：make collect SOURCE=fred/cpi"
+    }
+  ],
+  "run_footer": {
+    "finished_at": "2026-08-02T14:03:00+08:00",
+    "finished_label": "2026-08-02 14:03（+08:00）",
+    "duration_label": "不到 1 分钟"
+  }
+}

@@ -1,0 +1,126 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/apexfin/apexfin/contracts/sources.schema.json",
+  "title": "APEXFIN source catalog",
+  "description": "Data-driven declaration of which sources and symbols the pipeline covers. No symbol lists in code.",
+  "type": "object",
+  "required": ["version", "sources"],
+  "additionalProperties": false,
+  "properties": {
+    "version": { "type": "integer", "const": 1 },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/source" }
+    }
+  },
+  "$defs": {
+    "source": {
+      "type": "object",
+      "required": ["name", "domain", "collector", "frequency", "enabled", "reliability", "symbols"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "pattern": "^[a-z][a-z0-9_]{1,63}$" },
+        "domain": {
+          "type": "string",
+          "enum": ["equity", "macro", "volatility", "fx", "commodity", "rates", "synthetic"]
+        },
+        "collector": {
+          "type": "string",
+          "description": "Registered collector id, builtin or provided via the apexfin.sources entry point group."
+        },
+        "frequency": { "type": "string", "enum": ["daily", "weekly", "monthly"] },
+        "enabled": { "type": "boolean" },
+        "reliability": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "description": "Base factor of quality_score. Official documented API 1.0, unofficial endpoint 0.9, derived series 0.85."
+        },
+        "requires_credentials": { "type": "boolean", "default": false },
+        "credential_env": {
+          "type": "string",
+          "pattern": "^APEXFIN_[A-Z0-9_]+$",
+          "description": "Environment variable name only. Never the value. A literal secret here fails validation at load time."
+        },
+        "min_request_interval_s": { "type": "number", "minimum": 0, "default": 0 },
+        "symbols": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/symbol" }
+        }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "requires_credentials": { "const": true } }, "required": ["requires_credentials"] },
+          "then": { "required": ["credential_env"] }
+        }
+      ]
+    },
+    "symbol": {
+      "type": "object",
+      "required": ["id"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "label": { "type": "string" },
+        "unit": { "type": "string", "enum": ["usd", "percent", "index", "ratio", "count"] },
+        "tier": {
+          "type": "string",
+          "enum": ["risk_essential", "support", "display_only", "research"],
+          "description": "Symbol-level tier overrides the source-level manifest tier for freshness gating."
+        }
+      }
+    }
+  },
+  "examples": [
+    {
+      "version": 1,
+      "sources": [
+        {
+          "name": "yahoo",
+          "domain": "equity",
+          "collector": "yahoo",
+          "frequency": "daily",
+          "enabled": false,
+          "reliability": 0.9,
+          "requires_credentials": false,
+          "min_request_interval_s": 1.5,
+          "symbols": [
+            { "id": "SPY", "label": "S&P 500 ETF", "unit": "usd", "tier": "risk_essential" },
+            { "id": "QQQ", "label": "Nasdaq 100 ETF", "unit": "usd", "tier": "support" },
+            { "id": "^VIX", "label": "CBOE Volatility Index", "unit": "index", "tier": "support" }
+          ]
+        },
+        {
+          "name": "fred",
+          "domain": "macro",
+          "collector": "fred",
+          "frequency": "daily",
+          "enabled": false,
+          "reliability": 1.0,
+          "requires_credentials": true,
+          "credential_env": "APEXFIN_FRED_API_KEY",
+          "min_request_interval_s": 0.5,
+          "symbols": [
+            { "id": "DGS10", "label": "10-Year Treasury Constant Maturity", "unit": "percent", "tier": "support" },
+            { "id": "DFF", "label": "Effective Federal Funds Rate", "unit": "percent", "tier": "support" }
+          ]
+        },
+        {
+          "name": "fixture_equity",
+          "domain": "equity",
+          "collector": "fixture",
+          "frequency": "daily",
+          "enabled": true,
+          "reliability": 1.0,
+          "requires_credentials": false,
+          "symbols": [
+            { "id": "SPY", "label": "S&P 500 ETF (offline sample)", "unit": "usd", "tier": "risk_essential" }
+          ]
+        }
+      ]
+    }
+  ]
+}

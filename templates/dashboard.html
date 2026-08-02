@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>APEXFIN · 数据健康看板</title>
+  <meta name="description" content="APEXFIN 数据工程流水线质量门看板：数据健康度、质量门矩阵、采集管道与决策输出。" />
+  <link rel="stylesheet" href="../static/tokens.css" />
+  <link rel="stylesheet" href="../static/dashboard.css" />
+  <script src="../static/vendor/echarts.min.js" defer></script>
+  <script src="../static/app.js" defer></script>
+</head>
+<body>
+{% include "_sprite.svg.html" %}
+<a class="skip-link" href="#main">跳到主要内容</a>
+
+<header class="topbar">
+  <div class="topbar__brand">
+    <svg class="ico ico--accent" aria-hidden="true"><use href="#icon-database"></use></svg>
+    APEXFIN
+  </div>
+  <div class="topbar__meta">
+    <span>run <span class="num">{{ datapack.run_id }}</span></span>
+    <div class="theme-toggle" role="group" aria-label="主题切换">
+      <button type="button" data-theme-set="dark" aria-pressed="true" title="深色主题" aria-label="深色主题">
+        <svg class="ico" aria-hidden="true"><use href="#icon-moon"></use></svg>
+      </button>
+      <button type="button" data-theme-set="light" aria-pressed="false" title="浅色主题" aria-label="浅色主题">
+        <svg class="ico" aria-hidden="true"><use href="#icon-sun"></use></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main" class="shell">
+
+  <noscript>
+    <div class="degrade-note">已禁用 JavaScript —— 下方数据表与文本构成一份完整可读的报告，图表需启用脚本后渲染。</div>
+  </noscript>
+
+  <!-- GATE VERDICT -->
+  <section class="section" aria-labelledby="gate-h">
+    <div class="gate" data-s="{{ datapack.gate.tone }}">
+      <svg class="ico ico--lg" aria-hidden="true"><use href="#icon-{{ datapack.gate.icon_id }}"></use></svg>
+      <div>
+        <div class="gate__title" id="gate-h">
+          <span class="status" data-s="{{ datapack.gate.tone }}">{{ datapack.gate.verdict_label }}</span>
+          <span class="badge" data-s="{{ datapack.gate.tone }}">{{ datapack.gate.verdict }}</span>
+        </div>
+        <p class="gate__summary">{{ datapack.gate.summary }}</p>
+        <div class="gate__sources">
+          {% for s in datapack.gate.sources %}
+          <span class="badge" data-s="{{ s.state }}" title="{{ s.source_name }}：{{ s.label_text }}">{{ s.source_name }}</span>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUALITY GATE MATRIX -->
+  <section class="section" aria-labelledby="qm-h">
+    <h2 id="qm-h"><svg class="ico ico--muted" aria-hidden="true"><use href="#icon-shield-check"></use></svg>质量门矩阵</h2>
+    <div class="panel">
+      <div class="panel__body">
+        <div class="scroll-x">
+          <table class="qgate">
+            <caption class="sr-only">各数据源在 6 类质量检查（新鲜度 / 完整性 / 重复性 / 一致性 / 连续性 / 合理性）上的通过状态</caption>
+            <thead>
+              <tr>
+                <th scope="col" class="qgate__zh">数据源</th>
+                {% for chk in datapack.quality_matrix.checks %}
+                <th scope="col"><span class="qgate__zh">{{ chk.label_zh }}</span><span class="qgate__en">{{ chk.label_en }}</span></th>
+                {% endfor %}
+                <th scope="col" class="qgate__rate">通过率</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for row in datapack.quality_matrix.rows %}
+              <tr>
+                <th scope="row">{{ row.source_name }}</th>
+                {% for chk in datapack.quality_matrix.checks %}
+                {% set cell = row.cells[chk.key] %}
+                <td class="qgate__cell" data-s="{{ cell.state }}" tabindex="0" title="{{ cell.cell_tooltip }}" aria-label="{{ cell.cell_tooltip }}">
+                  <svg class="ico" role="img" aria-hidden="true"><use href="#icon-{{ cell.icon_id }}"></use></svg>
+                </td>
+                {% endfor %}
+                <td class="qgate__rate">
+                  <span class="num">{{ row.pass_count }}/{{ row.total }}</span>
+                  <div class="ratebar" data-s="{{ row.rate_state }}"><div class="ratebar__fill" style="width:{{ (row.rate * 100) | round }}%"></div></div>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <div class="legend">
+          <span class="status" data-s="healthy"><svg class="ico" aria-hidden="true"><use href="#icon-check-circle-2"></use></svg>通过</span>
+          <span class="status" data-s="degraded"><svg class="ico" aria-hidden="true"><use href="#icon-alert-triangle"></use></svg>降级</span>
+          <span class="status" data-s="blocked"><svg class="ico" aria-hidden="true"><use href="#icon-x-octagon"></use></svg>阻断</span>
+          <span class="status" data-s="unknown"><svg class="ico" aria-hidden="true"><use href="#icon-circle-dashed"></use></svg>未知 / 跳过</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HEALTH TRACK / FRESHNESS -->
+  <section class="section" aria-labelledby="health-h">
+    <h2 id="health-h"><svg class="ico ico--muted" aria-hidden="true"><use href="#icon-activity"></use></svg>数据健康度</h2>
+    <div class="panel">
+      <div class="panel__body">
+        <div class="health">
+          {% for row in datapack.health_rows %}
+          <div class="health__row">
+            <svg class="ico" aria-hidden="true"><use href="#icon-{{ row.icon_id }}"></use></svg>
+            <div class="health__src">
+              <b title="{{ row.source_name }}">{{ row.source_name }}</b>
+              <small>{{ row.symbol }}</small>
+            </div>
+            <div>
+              <span class="status" data-s="{{ row.state }}">{{ row.label_text }}</span>
+              {% if row.last_event_label %}<div class="health__date">{{ row.last_event_label }}</div>{% endif %}
+            </div>
+            <div>
+              {% if row.freshness %}
+              <div class="bar" role="progressbar" aria-valuenow="{{ row.freshness.bar_value }}" aria-valuemax="{{ row.freshness.bar_max }}" aria-label="{{ row.source_name }} {{ row.freshness.label }}" data-overdue="{{ 'true' if row.freshness.overdue else 'false' }}">
+                <div class="bar__fill" style="width:{{ (row.freshness.bar_value / row.freshness.bar_max * 100) | round }}%"></div>
+              </div>
+              <div class="bar__label">{{ row.freshness.label }}</div>
+              {% else %}
+              <div class="health__note">{{ row.note or '从未采集（建库后首跑）' }}</div>
+              {% endif %}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PIPELINE RUNS -->
+  <section class="section" aria-labelledby="steps-h">
+    <h2 id="steps-h"><svg class="ico ico--muted" aria-hidden="true"><use href="#icon-git-commit-horizontal"></use></svg>采集管道</h2>
+    <div class="panel">
+      <div class="panel__body">
+        <div class="steps">
+          {% for step in datapack.steps %}
+          <div class="step">
+            <svg class="ico {{ 'ico--running' if step.status == 'running' else '' }}" aria-hidden="true"><use href="#icon-{{ step.icon_id }}"></use></svg>
+            <div class="step__name">{{ step.step_name }}</div>
+            <span class="badge" data-s="unknown" title="采集层级：{{ step.tier }}">{{ step.tier }}</span>
+            <span class="status" data-s="{{ step.status }}">{{ step.status_label }}</span>
+            <div class="step__dur num">{% if step.duration_label is not none %}{{ step.duration_label }}{% else %}—{% endif %}</div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DECISIONS -->
+  <section class="section" aria-labelledby="dec-h">
+    <h2 id="dec-h"><svg class="ico ico--muted" aria-hidden="true"><use href="#icon-trending-up"></use></svg>决策输出</h2>
+    <div class="panel">
+      <div class="panel__body">
+        <div class="decisions">
+          {% for d in datapack.decisions %}
+          <div class="decision">
+            <div class="decision__sym">
+              <b>{{ d.symbol }}</b>
+              <span class="delta" data-d="{{ d.direction }}">{{ d.direction_label }}</span>
+            </div>
+            <div class="decision__body">
+              <div class="decision__rationale">{{ d.rationale }}</div>
+              <div class="decision__foot">得分 <span class="num">{{ d.score }}</span> · 截至 {{ d.as_of }} · {{ d.decision_id }}</div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHARTS -->
+  <section class="section" aria-labelledby="charts-h">
+    <h2 id="charts-h"><svg class="ico ico--muted" aria-hidden="true"><use href="#icon-line-chart"></use></svg>图表</h2>
+    {% for c in datapack.charts %}
+    <div class="panel" style="margin-bottom: var(--space-3)">
+      <div class="panel__head"><svg class="ico" aria-hidden="true"><use href="#icon-{{ c.icon_id }}"></use></svg>{{ c.title }}</div>
+      <div class="panel__body">
+        <div class="chart"><div class="chart__canvas" id="chart-{{ c.chart_id }}" data-chart="{{ c.chart_id }}"></div></div>
+        <details class="chart-fallback" open>
+          <summary>数据表</summary>
+          <div class="scroll-x">
+            <table class="tbl">
+              <caption class="sr-only">{{ c.title }} 底层数据表</caption>
+              <thead><tr>{% for col in c.fallback_columns %}<th scope="col">{{ col }}</th>{% endfor %}</tr></thead>
+              <tbody>
+                {% for r in c.fallback_rows %}
+                <tr>{% for cell in r %}<td{% if not loop.first %} class="num"{% endif %}>{{ cell }}</td>{% endfor %}</tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </details>
+      </div>
+    </div>
+    {% endfor %}
+  </section>
+
+  <!-- NOTICES -->
+  {% if datapack.notices %}
+  <section class="section" aria-labelledby="notice-h">
+    <h2 id="notice-h"><svg class="ico ico--muted" aria-hidden="true"><use href="#icon-info"></use></svg>提示</h2>
+    <div class="notices">
+      {% for n in datapack.notices %}
+      <div class="notice" data-level="{{ n.level }}">
+        <svg class="ico" aria-hidden="true"><use href="#icon-{{ n.icon_id }}"></use></svg>
+        <span>{{ n.text }}</span>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+</main>
+
+<footer class="run-footer shell">
+  <p>
+    数据来源：Yahoo Finance、FRED。采集完成 <span class="num">{{ datapack.run_footer.finished_label }}</span>，
+    耗时 <span class="num">{{ datapack.run_footer.duration_label }}</span>，运行编号 <span class="num">{{ datapack.run_id }}</span>。
+  </p>
+  <p>决策输出为玩具级参考实现，仅用于演示管道链路，不构成任何投资建议。APEXFIN 以 MIT 许可证开源。</p>
+</footer>
+
+<script id="apexfin-datapack" type="application/json">{{ datapack | tojson }}</script>
+</body>
+</html>

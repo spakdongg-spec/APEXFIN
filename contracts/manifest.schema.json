@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/apexfin/apexfin/contracts/manifest.schema.json",
+  "title": "APEXFIN pipeline manifest",
+  "description": "Governance contract for the daily pipeline. Every step must justify why it runs.",
+  "type": "object",
+  "required": ["version", "steps"],
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+      "type": "integer",
+      "const": 1
+    },
+    "defaults": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "timeout_s": { "type": "integer", "minimum": 1, "maximum": 3600, "default": 120 },
+        "critical": { "type": "boolean", "default": false }
+      }
+    },
+    "steps": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/step" }
+    }
+  },
+  "$defs": {
+    "step": {
+      "type": "object",
+      "required": ["name", "tier", "keep_daily", "why"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]{1,63}$",
+          "description": "Must match a step registered via @step in code. Bidirectional consistency is enforced by `apexfin manifest validate`."
+        },
+        "tier": {
+          "type": "string",
+          "enum": ["risk_essential", "support", "display_only", "research"],
+          "description": "risk_essential: staleness blocks the run. support/display_only: degrade only. research: excluded from the daily chain."
+        },
+        "keep_daily": {
+          "type": "boolean",
+          "description": "Whether this step belongs to the daily chain. A keep_daily=true step must not depend on a keep_daily=false step."
+        },
+        "why": {
+          "type": "string",
+          "minLength": 12,
+          "description": "One sentence stating why this step is worth running. Empty or placeholder text fails validation. This field is the pipeline-slimming evidence."
+        },
+        "depends_on": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^[a-z][a-z0-9_]{1,63}$" },
+          "uniqueItems": true,
+          "default": [],
+          "description": "Declarative dependencies. Execution order is derived by topological sort; manual ordering is not supported by design."
+        },
+        "timeout_s": { "type": "integer", "minimum": 1, "maximum": 3600 },
+        "critical": {
+          "type": "boolean",
+          "description": "If true, failure of this step aborts the whole run."
+        },
+        "owner_note": { "type": "string" }
+      }
+    }
+  },
+  "examples": [
+    {
+      "version": 1,
+      "defaults": { "timeout_s": 120, "critical": false },
+      "steps": [
+        {
+          "name": "collect",
+          "tier": "risk_essential",
+          "keep_daily": true,
+          "critical": true,
+          "timeout_s": 180,
+          "depends_on": [],
+          "why": "Without fresh raw records every downstream conclusion is stale by construction."
+        },
+        {
+          "name": "process_silver",
+          "tier": "risk_essential",
+          "keep_daily": true,
+          "critical": true,
+          "depends_on": ["collect"],
+          "why": "Normalizes payloads into comparable numeric points that checks and strategies read."
+        },
+        {
+          "name": "quality_gate",
+          "tier": "risk_essential",
+          "keep_daily": true,
+          "critical": true,
+          "depends_on": ["process_silver"],
+          "why": "Blocks the run when risk-essential series are stale, which is the core promise of this project."
+        },
+        {
+          "name": "decide",
+          "tier": "support",
+          "keep_daily": true,
+          "depends_on": ["quality_gate"],
+          "why": "Produces the daily stance; skipped automatically when the gate is BLOCKED."
+        },
+        {
+          "name": "render",
+          "tier": "display_only",
+          "keep_daily": true,
+          "depends_on": ["quality_gate"],
+          "why": "Renders the dashboard including the degraded state, which is how failures become visible."
+        }
+      ]
+    }
+  ]
+}

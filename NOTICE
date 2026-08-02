@@ -1,0 +1,51 @@
+APEXFIN NOTICE
+==============
+
+This project is licensed under the MIT License (see LICENSE). The following
+third-party components are vendored into the repository or referenced at
+build time. Their licenses are reproduced or linked below; no component is
+redistributed under a license incompatible with the project's MIT terms.
+
+1. Apache ECharts
+-----------------
+- Component: `static/vendor/echarts.min.js` (vendored, shipped inside the
+  dashboard artifact).
+- Version: 6.1.0
+- License: Apache License, Version 2.0
+- Copyright: Apache Software Foundation
+- License text: https://www.apache.org/licenses/LICENSE-2.0
+- Notice: The file header of `echarts.min.js` carries the ASF license header;
+  this NOTICE preserves that attribution for the vendored copy.
+
+2. Lucide icons
+---------------
+- Component: `static/sprite.svg` and `templates/_sprite.svg.html` (generated
+  by `tools/build_sprite.py` from `config/icons.yaml`).
+- Version: 1.28.0 (pinned by `lucide_version` in `config/icons.yaml` and
+  per-icon SHA-256 in `config/icons.lock`).
+- License: ISC License
+- Copyright: Lucide Contributors (https://lucide.dev)
+- ISC License text:
+    ISC License
+
+    Copyright (c) for portions of Lucide are held by Lucide Contributors, 2024.
+
+    Permission to use, copy, modify, and/or distribute this software for any
+    purpose with or without fee is hereby granted, provided that the above
+    copyright notice and this permission notice appear in all copies.
+
+    THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+    WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+    MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+    ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+    WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+    ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+    OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+3. Runtime dependencies
+-----------------------
+The Python runtime dependencies declared in `pyproject.toml` are not vendored;
+they are resolved by the package manager. Licenses are MIT or BSD-3-Clause
+(Typer, pydantic, PyYAML, Jinja2, httpx, tenacity, structlog), plus ECharts
+(Apache-2.0) and lucide-static (ISC) as noted above. See each distribution's
+metadata for the authoritative license text.

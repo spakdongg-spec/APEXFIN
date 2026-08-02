@@ -1,0 +1,53 @@
+# APEXFIN daily pipeline manifest (ARCHITECTURE 5.2).
+#
+# The four-way consistency assertion (`apexfin manifest validate`) enforces
+# that every step here matches a @step registration in code, bidirectionally.
+# The `why` field is the pipeline-slimming evidence: a step that cannot justify
+# itself in a sentence gets removed.
+
+version: 1
+
+defaults:
+  timeout_s: 120
+  critical: false
+
+steps:
+  - name: collect
+    tier: risk_essential
+    keep_daily: true
+    critical: true
+    timeout_s: 180
+    depends_on: []
+    why: Without fresh raw records every downstream conclusion is stale by construction.
+
+  - name: process_silver
+    tier: risk_essential
+    keep_daily: true
+    critical: true
+    timeout_s: 180
+    depends_on: [collect]
+    why: Normalizes payloads into comparable numeric points that checks and strategies read.
+
+  - name: quality_gate
+    tier: risk_essential
+    keep_daily: true
+    critical: true
+    timeout_s: 120
+    depends_on: [process_silver]
+    why: Blocks the run when risk-essential series are stale, which is the core promise of this project.
+
+  - name: decide
+    tier: support
+    keep_daily: true
+    critical: false
+    timeout_s: 120
+    depends_on: [quality_gate]
+    why: Produces the daily stance; skipped automatically when the gate is BLOCKED.
+
+  - name: render
+    tier: display_only
+    keep_daily: true
+    critical: false
+    timeout_s: 60
+    depends_on: [quality_gate]
+    why: Renders the dashboard including the degraded state, which is how failures become visible.

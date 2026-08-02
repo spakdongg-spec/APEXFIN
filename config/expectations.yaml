@@ -1,0 +1,52 @@
+# APEXFIN quality expectations (O-09).
+#
+# Every threshold lives here rather than in code, because thresholds carry the
+# previous owner's judgement about the previous owner's data and a fork must be
+# able to change them without touching Python (ALPHA_BOUNDARY, risk R6).
+#
+# The `defaults` block is REQUIRED and every one of the four numeric keys must
+# be present explicitly. The Python dataclass defaults are a type fallback for
+# tests that construct SourceExpectation directly; the load path never falls
+# back to them -- a missing key is a ConfigError that names the key (O-09).
+
+version: 1
+
+defaults:
+  # Provenance: inherited from the APEXDATA SOURCE_EXPECTATIONS constant that
+  # this table was migrated from. 2 trading days gives a daily feed one full
+  # session of grace before freshness fires.
+  max_lag_trading_days: 2
+
+  # One month of NYSE trading days (~21) rounded down to 20; the completeness
+  # check counts how many of these expected sessions actually have data.
+  completeness_window_days: 20
+
+  # Zero holes tolerated by default. A daily series that skips a session has a
+  # hole, and holes are how downstream momentum quietly reads a stale close.
+  max_missing_trading_days: 0
+
+  # Longest run of consecutive missing trading days the continuity check
+  # tolerates. 1 means Friday->Monday (one missing session) is fine, a whole
+  # missing week is not. Distinct from max_missing: scattered holes and one
+  # blackout are different failures.
+  max_gap_trading_days: 1
+
+sources:
+  # Offline equity sample replayed by the fixture collector (src/apexfin/sources/
+  # fixtures/fresh/fixture_equity.json). AAPL is the risk-essential demo series;
+  # a single extra session of lag blocks the demo on purpose (make demo-stale).
+  fixture_equity:
+    frequency: daily
+    max_lag_trading_days: 1
+    expects_secondary: true   # volume is present in the OHLCV fixture
+    value_min: 0              # a negative price is a data error, not a print
+
+  # Offline macro sample (fixtures/fresh/fixture_macro.json). CPI YoY percent
+  # change is published on a lag; 5 trading days of grace keeps the demo fresh
+  # without pretending the release is same-day.
+  fixture_macro:
+    frequency: daily
+    max_lag_trading_days: 5
+    expects_secondary: false
+    value_min: -5             # deflation below -5% YoY would be a data error
+    value_max: 20             # CPI YoY above 20% has not happened in this era

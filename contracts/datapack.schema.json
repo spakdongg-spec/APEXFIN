@@ -1,0 +1,731 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/apexfin/apexfin/contracts/datapack.schema.json",
+  "$defs": {
+    "Chart": {
+      "additionalProperties": false,
+      "description": "A chart plus the table that replaces it when JavaScript is unavailable.\n\n`fallback_rows` is not a nicety: a governance dashboard that shows nothing\nwithout a CDN is not a governance dashboard.",
+      "properties": {
+        "chart_id": {
+          "title": "Chart Id",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "candlestick",
+            "macro",
+            "line"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "icon_id": {
+          "title": "Icon Id",
+          "type": "string"
+        },
+        "option": {
+          "additionalProperties": true,
+          "title": "Option",
+          "type": "object"
+        },
+        "fallback_columns": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Fallback Columns",
+          "type": "array"
+        },
+        "fallback_rows": {
+          "items": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "number"
+                }
+              ]
+            },
+            "type": "array"
+          },
+          "title": "Fallback Rows",
+          "type": "array"
+        }
+      },
+      "required": [
+        "chart_id",
+        "title",
+        "kind",
+        "icon_id",
+        "option",
+        "fallback_columns",
+        "fallback_rows"
+      ],
+      "title": "Chart",
+      "type": "object"
+    },
+    "CheckDef": {
+      "additionalProperties": false,
+      "description": "A column header of the quality matrix.\n\nDeliberately without `check_id`: the matrix is presentation, and leaking\nthe registered check id into the page would invite the frontend to build\nlogic on it.",
+      "properties": {
+        "key": {
+          "title": "Key",
+          "type": "string"
+        },
+        "label_zh": {
+          "title": "Label Zh",
+          "type": "string"
+        },
+        "label_en": {
+          "title": "Label En",
+          "type": "string"
+        }
+      },
+      "required": [
+        "key",
+        "label_zh",
+        "label_en"
+      ],
+      "title": "CheckDef",
+      "type": "object"
+    },
+    "DecisionRow": {
+      "additionalProperties": false,
+      "properties": {
+        "decision_id": {
+          "title": "Decision Id",
+          "type": "string"
+        },
+        "symbol": {
+          "title": "Symbol",
+          "type": "string"
+        },
+        "direction": {
+          "enum": [
+            "up",
+            "down",
+            "flat"
+          ],
+          "title": "Direction",
+          "type": "string"
+        },
+        "direction_label": {
+          "title": "Direction Label",
+          "type": "string"
+        },
+        "rationale": {
+          "title": "Rationale",
+          "type": "string"
+        },
+        "score": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Score",
+          "type": "number"
+        },
+        "as_of": {
+          "title": "As Of",
+          "type": "string"
+        }
+      },
+      "required": [
+        "decision_id",
+        "symbol",
+        "direction",
+        "direction_label",
+        "rationale",
+        "score",
+        "as_of"
+      ],
+      "title": "DecisionRow",
+      "type": "object"
+    },
+    "Freshness": {
+      "additionalProperties": false,
+      "description": "Pre-computed progress bar. The template must not divide.\n\n`bar_value` is clamped to `bar_max` so an eight-day-late series does not\nrender an eight-times-oversized bar; `overdue` carries the fact that the\nclamp happened, so the visual truth is not lost.",
+      "properties": {
+        "bar_value": {
+          "minimum": 0,
+          "title": "Bar Value",
+          "type": "integer"
+        },
+        "bar_max": {
+          "exclusiveMinimum": 0,
+          "title": "Bar Max",
+          "type": "integer"
+        },
+        "overdue": {
+          "title": "Overdue",
+          "type": "boolean"
+        },
+        "label": {
+          "title": "Label",
+          "type": "string"
+        }
+      },
+      "required": [
+        "bar_value",
+        "bar_max",
+        "overdue",
+        "label"
+      ],
+      "title": "Freshness",
+      "type": "object"
+    },
+    "GateBlock": {
+      "additionalProperties": false,
+      "description": "The verdict banner: the first thing a reader sees and the only thing\nthat tells them whether to trust the rest of the page.",
+      "properties": {
+        "verdict": {
+          "enum": [
+            "PASS",
+            "DEGRADED",
+            "BLOCKED"
+          ],
+          "title": "Verdict",
+          "type": "string"
+        },
+        "verdict_label": {
+          "title": "Verdict Label",
+          "type": "string"
+        },
+        "icon_id": {
+          "title": "Icon Id",
+          "type": "string"
+        },
+        "tone": {
+          "enum": [
+            "ok",
+            "warn",
+            "danger",
+            "muted"
+          ],
+          "title": "Tone",
+          "type": "string"
+        },
+        "summary": {
+          "title": "Summary",
+          "type": "string"
+        },
+        "sources": {
+          "items": {
+            "$ref": "#/$defs/SourceChip"
+          },
+          "title": "Sources",
+          "type": "array"
+        }
+      },
+      "required": [
+        "verdict",
+        "verdict_label",
+        "icon_id",
+        "tone",
+        "summary"
+      ],
+      "title": "GateBlock",
+      "type": "object"
+    },
+    "HealthRow": {
+      "additionalProperties": false,
+      "description": "One (source, symbol) row of the freshness table.\n\n`lag_trading_days` is `None` only when the series has never been seen. It\nis never 0 in that case -- zero would read as \"perfectly fresh\".",
+      "properties": {
+        "source_name": {
+          "title": "Source Name",
+          "type": "string"
+        },
+        "symbol": {
+          "title": "Symbol",
+          "type": "string"
+        },
+        "state": {
+          "enum": [
+            "healthy",
+            "degraded",
+            "blocked",
+            "unknown"
+          ],
+          "title": "State",
+          "type": "string"
+        },
+        "label_text": {
+          "title": "Label Text",
+          "type": "string"
+        },
+        "icon_id": {
+          "title": "Icon Id",
+          "type": "string"
+        },
+        "tone": {
+          "enum": [
+            "ok",
+            "warn",
+            "danger",
+            "muted"
+          ],
+          "title": "Tone",
+          "type": "string"
+        },
+        "lag_trading_days": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Lag Trading Days"
+        },
+        "max_lag_trading_days": {
+          "exclusiveMinimum": 0,
+          "title": "Max Lag Trading Days",
+          "type": "integer"
+        },
+        "freshness": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Freshness"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "last_event_date": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Last Event Date"
+        },
+        "last_event_label": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Last Event Label"
+        },
+        "note": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Note"
+        }
+      },
+      "required": [
+        "source_name",
+        "symbol",
+        "state",
+        "label_text",
+        "icon_id",
+        "tone",
+        "lag_trading_days",
+        "max_lag_trading_days",
+        "freshness",
+        "last_event_date",
+        "last_event_label",
+        "note"
+      ],
+      "title": "HealthRow",
+      "type": "object"
+    },
+    "MatrixCell": {
+      "additionalProperties": false,
+      "properties": {
+        "state": {
+          "enum": [
+            "healthy",
+            "degraded",
+            "blocked",
+            "unknown"
+          ],
+          "title": "State",
+          "type": "string"
+        },
+        "cell_value": {
+          "title": "Cell Value",
+          "type": "string"
+        },
+        "icon_id": {
+          "title": "Icon Id",
+          "type": "string"
+        },
+        "cell_tooltip": {
+          "title": "Cell Tooltip",
+          "type": "string"
+        }
+      },
+      "required": [
+        "state",
+        "cell_value",
+        "icon_id",
+        "cell_tooltip"
+      ],
+      "title": "MatrixCell",
+      "type": "object"
+    },
+    "MatrixRow": {
+      "additionalProperties": false,
+      "properties": {
+        "source_name": {
+          "title": "Source Name",
+          "type": "string"
+        },
+        "cells": {
+          "additionalProperties": {
+            "$ref": "#/$defs/MatrixCell"
+          },
+          "title": "Cells",
+          "type": "object"
+        },
+        "pass_count": {
+          "minimum": 0,
+          "title": "Pass Count",
+          "type": "integer"
+        },
+        "total": {
+          "exclusiveMinimum": 0,
+          "title": "Total",
+          "type": "integer"
+        },
+        "rate": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Rate",
+          "type": "number"
+        },
+        "rate_state": {
+          "enum": [
+            "ok",
+            "warn"
+          ],
+          "title": "Rate State",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source_name",
+        "cells",
+        "pass_count",
+        "total",
+        "rate",
+        "rate_state"
+      ],
+      "title": "MatrixRow",
+      "type": "object"
+    },
+    "Notice": {
+      "additionalProperties": false,
+      "properties": {
+        "level": {
+          "enum": [
+            "info",
+            "warn",
+            "danger"
+          ],
+          "title": "Level",
+          "type": "string"
+        },
+        "icon_id": {
+          "title": "Icon Id",
+          "type": "string"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "level",
+        "icon_id",
+        "text"
+      ],
+      "title": "Notice",
+      "type": "object"
+    },
+    "QualityMatrix": {
+      "additionalProperties": false,
+      "properties": {
+        "checks": {
+          "items": {
+            "$ref": "#/$defs/CheckDef"
+          },
+          "title": "Checks",
+          "type": "array"
+        },
+        "rows": {
+          "items": {
+            "$ref": "#/$defs/MatrixRow"
+          },
+          "title": "Rows",
+          "type": "array"
+        }
+      },
+      "required": [
+        "checks"
+      ],
+      "title": "QualityMatrix",
+      "type": "object"
+    },
+    "RunFooter": {
+      "additionalProperties": false,
+      "description": "Provenance line at the bottom of the page.\n\n`finished_at` is `None` when the run never finished -- a crash, a kill, a\ncontainer eviction. In that case the labels say so instead of quietly\nsubstituting the render time and reporting a duration of zero.",
+      "properties": {
+        "finished_at": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Finished At"
+        },
+        "finished_label": {
+          "title": "Finished Label",
+          "type": "string"
+        },
+        "duration_label": {
+          "title": "Duration Label",
+          "type": "string"
+        }
+      },
+      "required": [
+        "finished_at",
+        "finished_label",
+        "duration_label"
+      ],
+      "title": "RunFooter",
+      "type": "object"
+    },
+    "SourceChip": {
+      "additionalProperties": false,
+      "description": "One source pill in the gate banner.",
+      "properties": {
+        "source_name": {
+          "title": "Source Name",
+          "type": "string"
+        },
+        "state": {
+          "enum": [
+            "healthy",
+            "degraded",
+            "blocked",
+            "unknown"
+          ],
+          "title": "State",
+          "type": "string"
+        },
+        "label_text": {
+          "title": "Label Text",
+          "type": "string"
+        },
+        "icon_id": {
+          "title": "Icon Id",
+          "type": "string"
+        },
+        "tone": {
+          "enum": [
+            "ok",
+            "warn",
+            "danger",
+            "muted"
+          ],
+          "title": "Tone",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source_name",
+        "state",
+        "label_text",
+        "icon_id",
+        "tone"
+      ],
+      "title": "SourceChip",
+      "type": "object"
+    },
+    "StepRow": {
+      "additionalProperties": false,
+      "description": "One row of the run timeline.\n\n`duration_s` and `duration_label` are both nullable because a running step\nhas no duration yet, and printing `0.0 秒` for it would be a lie.",
+      "properties": {
+        "step_name": {
+          "title": "Step Name",
+          "type": "string"
+        },
+        "tier": {
+          "title": "Tier",
+          "type": "string"
+        },
+        "tier_state": {
+          "enum": [
+            "ok",
+            "warn"
+          ],
+          "title": "Tier State",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "ok",
+            "running",
+            "skipped",
+            "failed"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "status_label": {
+          "title": "Status Label",
+          "type": "string"
+        },
+        "icon_id": {
+          "title": "Icon Id",
+          "type": "string"
+        },
+        "duration_s": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Duration S"
+        },
+        "duration_label": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Duration Label"
+        },
+        "ran_at": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Ran At"
+        },
+        "note": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Note"
+        }
+      },
+      "required": [
+        "step_name",
+        "tier",
+        "tier_state",
+        "status",
+        "status_label",
+        "icon_id",
+        "duration_s",
+        "duration_label",
+        "ran_at",
+        "note"
+      ],
+      "title": "StepRow",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Everything the dashboard renders, and nothing it has to compute.",
+  "properties": {
+    "generated_at": {
+      "title": "Generated At",
+      "type": "string"
+    },
+    "run_id": {
+      "title": "Run Id",
+      "type": "string"
+    },
+    "gate": {
+      "$ref": "#/$defs/GateBlock"
+    },
+    "quality_matrix": {
+      "$ref": "#/$defs/QualityMatrix"
+    },
+    "health_rows": {
+      "items": {
+        "$ref": "#/$defs/HealthRow"
+      },
+      "title": "Health Rows",
+      "type": "array"
+    },
+    "steps": {
+      "items": {
+        "$ref": "#/$defs/StepRow"
+      },
+      "title": "Steps",
+      "type": "array"
+    },
+    "decisions": {
+      "items": {
+        "$ref": "#/$defs/DecisionRow"
+      },
+      "title": "Decisions",
+      "type": "array"
+    },
+    "charts": {
+      "items": {
+        "$ref": "#/$defs/Chart"
+      },
+      "title": "Charts",
+      "type": "array"
+    },
+    "notices": {
+      "items": {
+        "$ref": "#/$defs/Notice"
+      },
+      "title": "Notices",
+      "type": "array"
+    },
+    "run_footer": {
+      "$ref": "#/$defs/RunFooter"
+    }
+  },
+  "required": [
+    "generated_at",
+    "run_id",
+    "gate",
+    "quality_matrix",
+    "run_footer"
+  ],
+  "title": "DataPack",
+  "type": "object"
+}

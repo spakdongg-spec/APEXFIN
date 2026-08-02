@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/apexfin/apexfin/contracts/silver_point.schema.json",
+  "title": "APEXFIN silver point",
+  "description": "The normalized unit of data. Third-party extractors must emit objects matching this schema.",
+  "type": "object",
+  "required": [
+    "source_name",
+    "domain",
+    "symbol",
+    "event_time",
+    "event_date",
+    "value",
+    "quality_score",
+    "is_filled"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "source_name": { "type": "string", "pattern": "^[a-z][a-z0-9_]{1,63}$" },
+    "domain": {
+      "type": "string",
+      "enum": ["equity", "macro", "volatility", "fx", "commodity", "rates", "synthetic"]
+    },
+    "symbol": { "type": "string", "minLength": 1 },
+    "event_time": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "description": "Business time in UTC. This is the time the observation refers to, NOT the time it was fetched. Getting this wrong is the root cause of the silent-staleness failure class."
+    },
+    "event_date": {
+      "type": "string",
+      "format": "date",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+      "description": "Trading-day key derived from event_time. Stored separately so freshness and continuity checks can use an index."
+    },
+    "value": {
+      "type": "number",
+      "description": "The single number this row means. Nulls are not allowed: a missing observation must be absent as a row, not present as a null."
+    },
+    "value_secondary": { "type": ["number", "null"] },
+    "unit": { "type": ["string", "null"], "enum": ["usd", "percent", "index", "ratio", "count", null] },
+    "quality_score": { "type": "number", "minimum": 0.0, "maximum": 1.0 },
+    "is_filled": {
+      "type": "boolean",
+      "description": "True only if produced by an explicit fill step. Silent forward-fill is prohibited; filled rows are visibly marked on the dashboard."
+    },
+    "payload_json": { "type": ["object", "null"] }
+  },
+  "examples": [
+    {
+      "source_name": "fixture_equity",
+      "domain": "equity",
+      "symbol": "SPY",
+      "event_time": "2026-07-31T20:00:00Z",
+      "event_date": "2026-07-31",
+      "value": 612.44,
+      "value_secondary": 68231400,
+      "unit": "usd",
+      "quality_score": 1.0,
+      "is_filled": false,
+      "payload_json": { "open": 610.1, "high": 613.8, "low": 609.2 }
+    }
+  ]
+}

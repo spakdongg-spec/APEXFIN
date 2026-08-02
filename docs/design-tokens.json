@@ -1,0 +1,330 @@
+{
+  "$schema": "https://design-tokens.github.io/community-group/format/",
+  "$meta": {
+    "project": "APEXFIN",
+    "version": "1.0.0",
+    "register": "product",
+    "scales": { "designVariance": 3, "motionIntensity": 2, "visualDensity": 8 },
+    "defaultTheme": "dark",
+    "marketConvention": "cn-red-up-green-down",
+    "channelIsolation": {
+      "market": {
+        "tokens": ["mkt.up", "mkt.down", "mkt.flat"],
+        "allowedCarriers": ["numeral-foreground", "direction-glyph", "row-wash-12pct", "echarts-candlestick", "echarts-volume"],
+        "forbiddenCarriers": ["icon", "badge-fill", "button", "border"]
+      },
+      "status": {
+        "tokens": ["st.ok", "st.warn", "st.fail", "st.idle"],
+        "allowedCarriers": ["status-icon", "badge-fill", "panel-top-rail", "progressbar"],
+        "forbiddenCarriers": ["bare-numeral-foreground"]
+      },
+      "rule": "A colored numeral is always market. A colored icon or fill is always status. Never cross."
+    }
+  },
+
+  "enumMapping": {
+    "_note": "Enum strings come from DATA_CONTRACT.md / INTERFACES.md (高见远, v1.0). Template data-* attribute values MUST use these exact lowercase strings; do NOT invent ok/warn/fail abstractions. The 4 visual aggregates (ok/warn/fail/idle) are internal only.",
+    "status": {
+      "healthy":  "stOk",  "pass":  "stOk",  "ok":  "stOk",
+      "degraded": "stWarn", "warning": "stWarn", "DEGRADED": "stWarn", "WARNING": "stWarn",
+      "blocked":  "stFail", "failed": "stFail", "BLOCKED": "stFail", "FAILED": "stFail", "BLOCKING": "stFail",
+      "unknown":  "stIdle", "skipped": "stIdle", "info": "stIdle", "running": "stIdle",
+      "_pulse": "running animates st-pulse 1.6s ease-in-out infinite"
+    },
+    "market": {
+      "long": "mktUp", "hit": "mktUp",
+      "short": "mktDown", "miss": "mktDown",
+      "flat": "mktFlat", "no_call": "mktFlat", "void": "mktFlat",
+      "pending": "stIdle"
+    },
+    "qualityChecks": ["freshness", "completeness", "duplicates", "consistency", "continuity", "range"],
+    "gateVerdict": ["PASS", "DEGRADED", "BLOCKED"],
+    "severity": ["INFO", "WARNING", "BLOCKING"],
+    "pipelineState": ["RUNNING", "PASS", "DEGRADED", "BLOCKED", "FAILED"],
+    "stepStatus": ["OK", "FAILED", "SKIPPED"],
+    "stance": ["long", "short", "flat", "no_call"],
+    "outcome": ["hit", "miss", "void", "pending"]
+  },
+
+  "color": {
+    "dark": {
+      "bg":            { "value": "#0B0E14", "type": "color", "layer": "A1-identity", "role": "page background" },
+      "surface":       { "value": "#111721", "type": "color", "layer": "A1-identity", "role": "panel background" },
+      "surface2":      { "value": "#161D29", "type": "color", "layer": "B-slot",      "role": "table head / row hover / nested" },
+      "surface3":      { "value": "#1C2532", "type": "color", "layer": "B-slot",      "role": "selected / active" },
+
+      "fg":            { "value": "#E8EEF7", "type": "color", "layer": "A1-identity", "contrastOnSurface": 15.4 },
+      "fg2":           { "value": "#AFBBCB", "type": "color", "layer": "B-slot",      "contrastOnSurface": 9.2 },
+      "muted":         { "value": "#8290A4", "type": "color", "layer": "A1-identity", "contrastOnSurface": 5.5 },
+      "meta":          { "value": "#616E82", "type": "color", "layer": "B-slot",      "contrastOnSurface": 3.5,
+                         "restriction": "only >=16px or non-essential; must not solely carry critical info" },
+
+      "border":        { "value": "#202938", "type": "color", "layer": "A1-identity", "role": "panel outline" },
+      "borderSoft":    { "value": "#19212E", "type": "color", "layer": "B-slot",      "role": "table row divider" },
+      "borderStrong":  { "value": "#2C3849", "type": "color", "layer": "B-slot",      "role": "table head underline / axis" },
+
+      "accent":        { "value": "#4589E6", "type": "color", "layer": "A1-identity",
+                         "semantics": "interactive affordance only, NOT importance", "maxVisiblePerScreen": 2, "contrastOnSurface": 5.4 },
+      "accentFill":    { "value": "#2F6BC4", "type": "color", "layer": "A2" },
+      "accentOn":      { "value": "#FFFFFF", "type": "color", "layer": "A2", "contrastOnFill": 5.2 },
+      "accentHover":   { "value": "#5A98EA", "type": "color", "layer": "A2" },
+      "accentActive":  { "value": "#3B79D4", "type": "color", "layer": "A2" },
+      "accentWash":    { "value": "rgba(69, 137, 230, 0.12)", "type": "color", "layer": "A2" },
+
+      "mktUp":         { "value": "#F6564B", "type": "color", "channel": "market", "meaning": "rise (CN convention)", "glyph": "\u25B2", "contrastOnSurface": 5.5 },
+      "mktDown":       { "value": "#17BE86", "type": "color", "channel": "market", "meaning": "fall (CN convention)", "glyph": "\u25BC", "contrastOnSurface": 7.4 },
+      "mktFlat":       { "value": "#8290A4", "type": "color", "channel": "market", "meaning": "unchanged / halted",   "glyph": "\u2014" },
+      "mktUpWash":     { "value": "rgba(246, 86, 75, 0.12)",   "type": "color", "channel": "market" },
+      "mktDownWash":   { "value": "rgba(23, 190, 134, 0.12)",  "type": "color", "channel": "market" },
+      "mktFlatWash":   { "value": "rgba(130, 144, 164, 0.10)", "type": "color", "channel": "market" },
+
+      "stOk":          { "value": "#2E9BAF", "type": "color", "channel": "status", "meaning": "healthy / passed / fresh",
+                         "icon": "check-circle-2", "labelZh": "\u6b63\u5e38", "labelEn": "OK", "contrastOnSurface": 5.5,
+                         "note": "cyan, deliberately NOT green to avoid collision with market-down" },
+      "stWarn":        { "value": "#C99A3B", "type": "color", "channel": "status", "meaning": "warning / stale / degraded",
+                         "icon": "alert-triangle", "labelZh": "\u9648\u65e7", "labelEn": "STALE", "contrastOnSurface": 7.0 },
+      "stFail":        { "value": "#E14A63", "type": "color", "channel": "status", "meaning": "failed / interrupted / out-of-range",
+                         "icon": "x-octagon", "labelZh": "\u5931\u8d25", "labelEn": "FAIL", "contrastOnSurface": 4.6 },
+      "stIdle":        { "value": "#5E6B7E", "type": "color", "channel": "status", "meaning": "unknown / not run / skipped",
+                         "icon": "circle-dashed", "labelZh": "\u672a\u8fd0\u884c", "labelEn": "N/A" },
+
+      "stOkFill":      { "value": "#1B6B7A", "type": "color", "channel": "status", "onColor": "#FFFFFF", "contrastOnFill": 6.2 },
+      "stWarnFill":    { "value": "#8A6417", "type": "color", "channel": "status", "onColor": "#FFFFFF", "contrastOnFill": 5.4 },
+      "stFailFill":    { "value": "#B32E4C", "type": "color", "channel": "status", "onColor": "#FFFFFF", "contrastOnFill": 6.2 },
+      "stIdleFill":    { "value": "#38414F", "type": "color", "channel": "status", "onColor": "#AFBBCB" },
+
+      "stOkWash":      { "value": "rgba(46, 155, 175, 0.12)",  "type": "color", "channel": "status" },
+      "stWarnWash":    { "value": "rgba(201, 154, 59, 0.12)",  "type": "color", "channel": "status" },
+      "stFailWash":    { "value": "rgba(225, 74, 99, 0.12)",   "type": "color", "channel": "status" },
+      "stIdleWash":    { "value": "rgba(94, 107, 126, 0.10)",  "type": "color", "channel": "status" },
+
+      "chart1":        { "value": "#6E9BD8", "type": "color", "role": "categorical / macro series (neutral, non-directional)" },
+      "chart2":        { "value": "#5FA8A0", "type": "color" },
+      "chart3":        { "value": "#C0A268", "type": "color" },
+      "chart4":        { "value": "#9AA3B5", "type": "color" },
+      "chart5":        { "value": "#B98A78", "type": "color" },
+      "chart6":        { "value": "#7E8FB8", "type": "color" },
+      "chartAxis":     { "value": "#2C3849", "type": "color" },
+      "chartSplit":    { "value": "#1B2330", "type": "color", "note": "grid lines barely visible by design" },
+      "chartLabel":    { "value": "#8290A4", "type": "color" },
+      "chartCrosshair":{ "value": "#AFBBCB", "type": "color" },
+      "chartTooltipBg":{ "value": "#161D29", "type": "color" }
+    },
+
+    "light": {
+      "bg":            { "value": "#F4F6F9", "type": "color" },
+      "surface":       { "value": "#FFFFFF", "type": "color" },
+      "surface2":      { "value": "#EDF1F6", "type": "color" },
+      "surface3":      { "value": "#E3E9F1", "type": "color" },
+
+      "fg":            { "value": "#10151D", "type": "color" },
+      "fg2":           { "value": "#33404F", "type": "color" },
+      "muted":         { "value": "#5A697C", "type": "color" },
+      "meta":          { "value": "#808D9E", "type": "color" },
+
+      "border":        { "value": "#D8DFE8", "type": "color" },
+      "borderSoft":    { "value": "#E8EDF3", "type": "color" },
+      "borderStrong":  { "value": "#C3CDDA", "type": "color" },
+
+      "accent":        { "value": "#2A62C4", "type": "color", "contrastOnSurface": 5.8 },
+      "accentFill":    { "value": "#2A62C4", "type": "color" },
+      "accentOn":      { "value": "#FFFFFF", "type": "color" },
+      "accentHover":   { "value": "#22539F", "type": "color" },
+      "accentActive":  { "value": "#1C4585", "type": "color" },
+      "accentWash":    { "value": "rgba(42, 98, 196, 0.10)", "type": "color" },
+
+      "mktUp":         { "value": "#D93025", "type": "color", "channel": "market", "contrastOnSurface": 4.8 },
+      "mktDown":       { "value": "#0C7B54", "type": "color", "channel": "market", "contrastOnSurface": 5.3 },
+      "mktFlat":       { "value": "#6B7787", "type": "color", "channel": "market" },
+      "mktUpWash":     { "value": "rgba(217, 48, 37, 0.09)", "type": "color", "channel": "market" },
+      "mktDownWash":   { "value": "rgba(12, 123, 84, 0.09)", "type": "color", "channel": "market" },
+      "mktFlatWash":   { "value": "rgba(107, 119, 135, 0.08)", "type": "color", "channel": "market" },
+
+      "stOk":          { "value": "#12758A", "type": "color", "channel": "status", "contrastOnSurface": 5.3 },
+      "stWarn":        { "value": "#96690F", "type": "color", "channel": "status", "contrastOnSurface": 4.9 },
+      "stFail":        { "value": "#C0334F", "type": "color", "channel": "status", "contrastOnSurface": 5.5 },
+      "stIdle":        { "value": "#6B7787", "type": "color", "channel": "status" },
+      "stOkFill":      { "value": "#12758A", "type": "color", "channel": "status", "onColor": "#FFFFFF" },
+      "stWarnFill":    { "value": "#96690F", "type": "color", "channel": "status", "onColor": "#FFFFFF" },
+      "stFailFill":    { "value": "#C0334F", "type": "color", "channel": "status", "onColor": "#FFFFFF" },
+      "stIdleFill":    { "value": "#6B7787", "type": "color", "channel": "status", "onColor": "#FFFFFF" },
+      "stOkWash":      { "value": "rgba(18, 117, 138, 0.10)", "type": "color", "channel": "status" },
+      "stWarnWash":    { "value": "rgba(150, 105, 15, 0.10)", "type": "color", "channel": "status" },
+      "stFailWash":    { "value": "rgba(192, 51, 79, 0.10)",  "type": "color", "channel": "status" },
+      "stIdleWash":    { "value": "rgba(107, 119, 135, 0.08)","type": "color", "channel": "status" },
+
+      "chart1":        { "value": "#3D72B8", "type": "color" },
+      "chart2":        { "value": "#2F7F77", "type": "color" },
+      "chart3":        { "value": "#96762F", "type": "color" },
+      "chart4":        { "value": "#66707F", "type": "color" },
+      "chart5":        { "value": "#8E5C48", "type": "color" },
+      "chart6":        { "value": "#4F6291", "type": "color" },
+      "chartAxis":     { "value": "#C3CDDA", "type": "color" },
+      "chartSplit":    { "value": "#EBEFF5", "type": "color" },
+      "chartLabel":    { "value": "#5A697C", "type": "color" },
+      "chartCrosshair":{ "value": "#33404F", "type": "color" },
+      "chartTooltipBg":{ "value": "#FFFFFF", "type": "color" }
+    }
+  },
+
+  "font": {
+    "family": {
+      "data": {
+        "value": "\"JetBrains Mono\", ui-monospace, \"SF Mono\", \"Cascadia Mono\", Menlo, Consolas, monospace",
+        "type": "fontFamily",
+        "role": "all numerals, tickers, timestamps, hashes, code, direction glyphs",
+        "selfHosted": true,
+        "license": "SIL OFL 1.1",
+        "weights": [400, 500],
+        "subset": "latin + digits + punctuation",
+        "approxSizeKb": 50,
+        "rationale": "dotted zero disambiguates 0 from O; true tabular figures align price columns"
+      },
+      "ui": {
+        "value": "-apple-system, BlinkMacSystemFont, \"Segoe UI Variable Text\", \"Segoe UI\", \"PingFang SC\", \"HarmonyOS Sans SC\", \"Microsoft YaHei\", \"Noto Sans SC\", sans-serif",
+        "type": "fontFamily",
+        "role": "CJK+Latin mixed UI text",
+        "selfHosted": false,
+        "rationale": "bundling a CJK webfont costs 1-8MB, unacceptable for a cloneable repo; Bloomberg/TradingView/Grafana all use system UI fonts for chrome"
+      }
+    },
+    "size": {
+      "2xs": { "value": "11px", "type": "dimension", "restriction": "units and superscripts only; never sole carrier of critical info" },
+      "xs":  { "value": "12px", "type": "dimension", "role": "labels, table headers, meta" },
+      "sm":  { "value": "13px", "type": "dimension", "role": "table data rows (default data size)" },
+      "md":  { "value": "14px", "type": "dimension", "role": "body base" },
+      "lg":  { "value": "16px", "type": "dimension", "role": "panel title, long-form prose (mandatory)" },
+      "xl":  { "value": "18px", "type": "dimension", "role": "section title" },
+      "2xl": { "value": "22px", "type": "dimension", "role": "KPI value" },
+      "3xl": { "value": "28px", "type": "dimension", "role": "primary KPI / health score" }
+    },
+    "leading": {
+      "data":  { "value": "1.35", "type": "number" },
+      "body":  { "value": "1.6",  "type": "number", "note": "CJK needs looser leading" },
+      "tight": { "value": "1.15", "type": "number" }
+    },
+    "tracking": {
+      "caps":    { "value": "0.08em",  "type": "dimension", "enforcement": "mandatory on all ALL-CAPS text" },
+      "data":    { "value": "0.01em",  "type": "dimension" },
+      "display": { "value": "-0.02em", "type": "dimension", "appliesTo": ">=22px" }
+    },
+    "weight": {
+      "read":     { "value": 400, "type": "fontWeight" },
+      "emph":     { "value": 500, "type": "fontWeight" },
+      "announce": { "value": 600, "type": "fontWeight" }
+    },
+    "numeric": {
+      "value": "tabular-nums",
+      "type": "fontVariantNumeric",
+      "enforcement": "mandatory on every element carrying a number; numbers are always right-aligned",
+      "minusSign": "U+2212",
+      "minusSignNote": "never use hyphen-minus U+002D; U+2212 is same width as + in monospace"
+    }
+  },
+
+  "space": {
+    "1":  { "value": "4px",  "type": "dimension" },
+    "2":  { "value": "8px",  "type": "dimension" },
+    "3":  { "value": "12px", "type": "dimension" },
+    "4":  { "value": "16px", "type": "dimension" },
+    "5":  { "value": "20px", "type": "dimension" },
+    "6":  { "value": "24px", "type": "dimension" },
+    "8":  { "value": "32px", "type": "dimension" },
+    "10": { "value": "40px", "type": "dimension" },
+    "12": { "value": "48px", "type": "dimension" },
+    "16": { "value": "64px", "type": "dimension" }
+  },
+
+  "density": {
+    "rowHeight":        { "value": "28px", "type": "dimension", "role": "data table row" },
+    "rowHeightCompact": { "value": "24px", "type": "dimension", "role": "quality gate matrix cell" },
+    "cellPaddingX":     { "value": "12px", "type": "dimension" },
+    "panelPadding":     { "value": "16px", "type": "dimension" },
+    "panelHeadHeight":  { "value": "36px", "type": "dimension" },
+    "topbarHeight":     { "value": "44px", "type": "dimension" },
+    "gridGap":          { "value": "12px", "type": "dimension" }
+  },
+
+  "radius": {
+    "xs":   { "value": "3px",   "type": "dimension", "role": "status badge, tier tag" },
+    "sm":   { "value": "4px",   "type": "dimension", "role": "input, small button" },
+    "md":   { "value": "6px",   "type": "dimension", "role": "button, dropdown" },
+    "lg":   { "value": "8px",   "type": "dimension", "role": "panel — project maximum" },
+    "pill": { "value": "999px", "type": "dimension", "role": "status dot only" },
+    "$rule": "hard cap 8px on containers; >=12px is forbidden (instrument aesthetic)"
+  },
+
+  "elevation": {
+    "flat":    { "value": "none", "type": "boxShadow", "role": "panels — always flat" },
+    "ring":    { "value": "inset 0 0 0 1px var(--border)", "type": "boxShadow" },
+    "overlay": { "value": "0 8px 24px rgba(0, 0, 0, 0.55)", "type": "boxShadow",
+                 "restriction": "tooltip / popover / modal only" },
+    "$rule": "dark theme expresses depth via luminance steps (bg -> surface -> surface2 -> surface3), never via shadow. Never combine 1px border with blur>=16px shadow on the same element."
+  },
+
+  "focus": {
+    "ring": { "value": "0 0 0 2px var(--bg), 0 0 0 4px var(--accent)", "type": "boxShadow",
+              "enforcement": "never remove; applies to a, button, summary, [tabindex], input, select via :focus-visible" }
+  },
+
+  "motion": {
+    "fast":  { "value": "120ms", "type": "duration", "role": "hover, press" },
+    "base":  { "value": "180ms", "type": "duration", "role": "details disclosure, tooltip fade" },
+    "ease":  { "value": "cubic-bezier(0.2, 0, 0, 1)", "type": "cubicBezier" },
+    "$rule": "MOTION_INTENSITY=2. No entrance animations, no scroll parallax, no decorative motion. ECharts animation:false. prefers-reduced-motion must collapse all durations to 0.01ms."
+  },
+
+  "layout": {
+    "containerMax":    { "value": "1440px", "type": "dimension" },
+    "gutterDesktop":   { "value": "24px",   "type": "dimension" },
+    "gutterTablet":    { "value": "16px",   "type": "dimension" },
+    "gutterPhone":     { "value": "12px",   "type": "dimension" },
+    "sectionYDesktop": { "value": "32px",   "type": "dimension" },
+    "sectionYTablet":  { "value": "24px",   "type": "dimension" },
+    "sectionYPhone":   { "value": "16px",   "type": "dimension" },
+    "breakpoints": {
+      "phone":   { "value": "0",      "type": "dimension", "columns": 1 },
+      "tablet":  { "value": "768px",  "type": "dimension", "columns": 6 },
+      "laptop":  { "value": "1024px", "type": "dimension", "columns": 12 },
+      "desktop": { "value": "1280px", "type": "dimension", "columns": 12 }
+    },
+    "touchTargetMin": { "value": "44px", "type": "dimension", "appliesBelow": "768px" }
+  },
+
+  "icon": {
+    "library":  { "value": "lucide", "license": "ISC", "delivery": "inlined SVG sprite, zero network requests" },
+    "strokeWidth": { "value": 2, "type": "number" },
+    "size": {
+      "sm": { "value": "16px", "type": "dimension", "role": "inline / table cell" },
+      "md": { "value": "20px", "type": "dimension", "role": "inside button" },
+      "lg": { "value": "24px", "type": "dimension", "role": "panel title" }
+    },
+    "subset": [
+      "check-circle-2", "alert-triangle", "x-octagon", "circle-dashed",
+      "database", "layers", "activity", "filter", "shield-check", "git-commit-horizontal",
+      "clock", "refresh-cw",
+      "candlestick-chart", "line-chart", "table-2",
+      "trending-up", "trending-down", "minus",
+      "chevron-down", "chevron-right", "external-link", "info", "download",
+      "sun", "moon", "circle-slash"
+    ],
+    "$rule": "ZERO emoji anywhere as functional icons. Regex gate: [\\u{1F300}-\\u{1F9FF}\\u{2600}-\\u{26FF}\\u{2700}-\\u{27BF}] must return zero matches across templates/, assets/, docs/."
+  },
+
+  "denylist": {
+    "hexValues": ["#7C3AED", "#A855F7", "#9333EA", "#EC4899", "#6366F1"],
+    "patterns": [
+      "linear-gradient with indigo->pink",
+      "gradient + glow border + glassmorphism trio",
+      "Welcome to", "Lorem ipsum", "Get started",
+      "border-radius >= 12px on containers",
+      "box-shadow on panels",
+      "zebra-striped tables",
+      "hardcoded hex outside tokens.css (except #fff / #000)",
+      "marketing hero section",
+      "color-only status encoding",
+      "proportional (non-tabular) numerals",
+      "hyphen-minus used as a negative sign"
+    ]
+  }
+}

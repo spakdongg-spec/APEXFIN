@@ -1,0 +1,366 @@
+/* ============================================================================
+   APEXFIN Design Tokens  v1.0
+   ----------------------------------------------------------------------------
+   Single source of truth for every color, size and duration in the dashboard.
+   RULE: no other stylesheet may contain a hardcoded color (except #fff / #000).
+
+   Channel isolation (read docs/DESIGN.md section 2.1 before touching colors):
+     --mkt-*  market direction (CN convention: RED = up, GREEN = down)
+              carriers: numeral foreground, direction glyph, 12% row wash,
+                        echarts candlestick + volume.       NOTHING ELSE.
+     --st-*   system status (ok / warn / fail / idle)
+              carriers: status icon, badge fill, panel top rail, progressbar.
+                                                            NOTHING ELSE.
+   A colored numeral is always market. A colored icon/fill is always status.
+   ========================================================================== */
+
+/* ============================================================================
+   O-10 EXEMPTION — THE 300-LINE RULE DOES NOT APPLY TO THIS FILE
+   ----------------------------------------------------------------------------
+   ① 本文件是纯 design-token 声明表：只有 @font-face（字体加载前置）与
+      :root / [data-*] 主题作用域内的 token 赋值，无组件类 / 元素 / 属性选择器，
+      无控制流。因此「单文件 ≤300 行」约束的「逻辑单元」前提在此不适用。
+   ② 唯一例外是下方 @font-face 两块（理由见其注释）：字体是 --font-data /
+      --font-ui 的加载前置，拆到 dashboard.css 会让 token 引用未声明字体族。
+   ③ 若将来在本文件引入任何 类选择器 / 元素选择器 / 属性选择器（含 [tabindex]），
+      本豁免立即自动失效，须把这些规则拆回 static/dashboard.css 并重新计行。
+   ========================================================================== */
+
+/* ---------- @font-face STAYS IN tokens.css (O-10 documented exception) -----
+   These two blocks are the LOADING PREREQUISITE for the --font-data /
+   --font-ui tokens declared just below. Splitting them into dashboard.css
+   would force a token to reference a font-family declared elsewhere, breaking
+   the link — worse than a few extra lines. This is the ONLY non-token content
+   permitted in this file. Everything else here is a pure declaration table. */
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("./fonts/JetBrainsMono-Regular-subset.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("./fonts/JetBrainsMono-Medium-subset.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ==========================================================================
+   THEME-INDEPENDENT TOKENS
+   ========================================================================== */
+:root {
+
+  /* ---- Typography: families ---------------------------------------------- */
+  --font-data: "JetBrains Mono", ui-monospace, "SF Mono", "Cascadia Mono",
+               Menlo, Consolas, monospace;
+  --font-ui:   -apple-system, BlinkMacSystemFont, "Segoe UI Variable Text",
+               "Segoe UI", "PingFang SC", "HarmonyOS Sans SC",
+               "Microsoft YaHei", "Noto Sans SC", sans-serif;
+
+  /* ---- Typography: scale (VISUAL_DENSITY = 8, compact) -------------------- */
+  --text-2xs: 11px;   /* units / superscripts ONLY, never critical info alone */
+  --text-xs:  12px;   /* labels, table headers, meta                          */
+  --text-sm:  13px;   /* table data rows (default data size)                  */
+  --text-md:  14px;   /* body base                                            */
+  --text-lg:  16px;   /* panel title, long-form prose (mandatory for prose)   */
+  --text-xl:  18px;   /* section title                                        */
+  --text-2xl: 22px;   /* KPI value                                            */
+  --text-3xl: 28px;   /* primary KPI / health score                           */
+
+  --leading-data:  1.35;
+  --leading-body:  1.6;     /* CJK prose needs looser leading */
+  --leading-tight: 1.15;
+
+  --tracking-caps:    0.08em;   /* MANDATORY on all ALL-CAPS text */
+  --tracking-data:    0.01em;
+  --tracking-display: -0.02em;  /* >= 22px */
+
+  --weight-read:     400;
+  --weight-emph:     500;
+  --weight-announce: 600;
+
+  /* ---- Spacing (4px grid) ------------------------------------------------- */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-8:  32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* ---- Density ------------------------------------------------------------ */
+  --row-h:         28px;
+  --row-h-compact: 24px;
+  --cell-px:       12px;
+  --panel-pad:     16px;
+  --panel-head-h:  36px;
+  --topbar-h:      44px;
+  --grid-gap:      12px;
+
+  /* ---- Radius (instrument aesthetic: hard cap 8px on containers) ---------- */
+  --radius-xs:   3px;
+  --radius-sm:   4px;
+  --radius-md:   6px;
+  --radius-lg:   8px;
+  --radius-pill: 999px;
+
+  /* ---- Motion (MOTION_INTENSITY = 2) -------------------------------------- */
+  --motion-fast:   120ms;
+  --motion-base:   180ms;
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+
+  /* ---- Layout ------------------------------------------------------------- */
+  --container-max:     1440px;
+  --gutter-desktop:    24px;
+  --gutter-tablet:     16px;
+  --gutter-phone:      12px;
+  --section-y-desktop: 32px;
+  --section-y-tablet:  24px;
+  --section-y-phone:   16px;
+
+  /* ---- Icons -------------------------------------------------------------- */
+  --icon-sm: 16px;
+  --icon-md: 20px;
+  --icon-lg: 24px;
+}
+
+/* ==========================================================================
+   DARK THEME  (default)
+   ========================================================================== */
+:root,
+:root[data-theme="dark"] {
+
+  /* ---- Surface ladder (luminance steps replace shadows) ------------------- */
+  --bg:        #0B0E14;
+  --surface:   #111721;
+  --surface-2: #161D29;
+  --surface-3: #1C2532;
+
+  /* ---- Foreground ladder -------------------------------------------------- */
+  --fg:    #E8EEF7;   /* 15.4:1 on --surface */
+  --fg-2:  #AFBBCB;   /*  9.2:1 */
+  --muted: #8290A4;   /*  5.5:1 */
+  --meta:  #616E82;   /*  3.5:1 -- >=16px or non-essential ONLY */
+
+  /* ---- Borders ------------------------------------------------------------ */
+  --border:        #202938;
+  --border-soft:   #19212E;
+  --border-strong: #2C3849;
+
+  /* ---- Accent: means "interactive", NOT "important". Max 2 visible/screen - */
+  --accent:        #4589E6;   /* 5.4:1 */
+  --accent-fill:   #2F6BC4;
+  --accent-on:     #FFFFFF;   /* 6.2:1 on --accent-fill */
+  --accent-hover:  #5A98EA;
+  --accent-active: #3B79D4;
+  --accent-wash:   rgba(69, 137, 230, 0.12);
+
+  /* ---- Channel M: market direction (CN: RED up / GREEN down) -------------- */
+  --mkt-up:        #F6564B;   /* 5.5:1 */
+  --mkt-down:      #17BE86;   /* 7.4:1 */
+  --mkt-flat:      #8290A4;
+  --mkt-up-wash:   rgba(246,  86,  75, 0.12);
+  --mkt-down-wash: rgba( 23, 190, 134, 0.12);
+  --mkt-flat-wash: rgba(130, 144, 164, 0.10);
+
+  /* ---- Channel S: system status (cyan for OK, deliberately NOT green) ----- */
+  --st-ok:   #2E9BAF;   /* 5.5:1 */
+  --st-warn: #C99A3B;   /* 7.0:1 */
+  --st-fail: #E14A63;   /* 4.6:1 */
+  --st-idle: #5E6B7E;
+
+  --st-ok-fill:   #1B6B7A;
+  --st-warn-fill: #8A6417;
+  --st-fail-fill: #B32E4C;
+  --st-idle-fill: #38414F;
+
+  --st-ok-wash:   rgba( 46, 155, 175, 0.12);
+  --st-warn-wash: rgba(201, 154,  59, 0.12);
+  --st-fail-wash: rgba(225,  74,  99, 0.12);
+  --st-idle-wash: rgba( 94, 107, 126, 0.10);
+
+  /* ---- Charts: neutral categorical series (macro / non-directional) ------- */
+  --chart-1: #6E9BD8;
+  --chart-2: #5FA8A0;
+  --chart-3: #C0A268;
+  --chart-4: #9AA3B5;
+  --chart-5: #B98A78;
+  --chart-6: #7E8FB8;
+
+  --chart-axis:       #2C3849;
+  --chart-split:      #1B2330;
+  --chart-label:      #8290A4;
+  --chart-crosshair:  #AFBBCB;
+  --chart-tooltip-bg: #161D29;
+
+  /* ---- Elevation ---------------------------------------------------------- */
+  --elev-flat:    none;
+  --elev-ring:    inset 0 0 0 1px var(--border);
+  --elev-overlay: 0 8px 24px rgba(0, 0, 0, 0.55);
+
+  /* ---- Focus -------------------------------------------------------------- */
+  --focus-ring: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent);
+
+  color-scheme: dark;
+}
+
+/* ==========================================================================
+   LIGHT THEME
+   Same semantic roles, separately tuned values.
+   A hex that reads correctly on near-black reads neon on white.
+   ========================================================================== */
+:root[data-theme="light"] {
+  --bg:        #F4F6F9;
+  --surface:   #FFFFFF;
+  --surface-2: #EDF1F6;
+  --surface-3: #E3E9F1;
+
+  --fg:    #10151D;
+  --fg-2:  #33404F;
+  --muted: #5A697C;
+  --meta:  #808D9E;
+
+  --border:        #D8DFE8;
+  --border-soft:   #E8EDF3;
+  --border-strong: #C3CDDA;
+
+  --accent:        #2A62C4;   /* 5.8:1 */
+  --accent-fill:   #2A62C4;
+  --accent-on:     #FFFFFF;
+  --accent-hover:  #22539F;
+  --accent-active: #1C4585;
+  --accent-wash:   rgba(42, 98, 196, 0.10);
+
+  --mkt-up:        #D93025;   /* 4.8:1 */
+  --mkt-down:      #0C7B54;   /* 5.3:1 */
+  --mkt-flat:      #6B7787;
+  --mkt-up-wash:   rgba(217,  48,  37, 0.09);
+  --mkt-down-wash: rgba( 12, 123,  84, 0.09);
+  --mkt-flat-wash: rgba(107, 119, 135, 0.08);
+
+  --st-ok:   #12758A;   /* 5.3:1 */
+  --st-warn: #96690F;   /* 4.9:1 */
+  --st-fail: #C0334F;   /* 5.5:1 */
+  --st-idle: #6B7787;
+
+  --st-ok-fill:   #12758A;
+  --st-warn-fill: #96690F;
+  --st-fail-fill: #C0334F;
+  --st-idle-fill: #6B7787;
+
+  --st-ok-wash:   rgba( 18, 117, 138, 0.10);
+  --st-warn-wash: rgba(150, 105,  15, 0.10);
+  --st-fail-wash: rgba(192,  51,  79, 0.10);
+  --st-idle-wash: rgba(107, 119, 135, 0.08);
+
+  --chart-1: #3D72B8;
+  --chart-2: #2F7F77;
+  --chart-3: #96762F;
+  --chart-4: #66707F;
+  --chart-5: #8E5C48;
+  --chart-6: #4F6291;
+
+  --chart-axis:       #C3CDDA;
+  --chart-split:      #EBEFF5;
+  --chart-label:      #5A697C;
+  --chart-crosshair:  #33404F;
+  --chart-tooltip-bg: #FFFFFF;
+
+  --elev-flat:    none;
+  --elev-ring:    inset 0 0 0 1px var(--border);
+  --elev-overlay: 0 8px 24px rgba(16, 21, 29, 0.12);
+
+  --focus-ring: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent);
+
+  color-scheme: light;
+}
+
+/* Respect OS preference only when the user has not chosen explicitly.
+   `data-theme` is written to <html> by the theme toggle + localStorage. */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) {
+    --bg: #F4F6F9; --surface: #FFFFFF; --surface-2: #EDF1F6; --surface-3: #E3E9F1;
+    --fg: #10151D; --fg-2: #33404F; --muted: #5A697C; --meta: #808D9E;
+    --border: #D8DFE8; --border-soft: #E8EDF3; --border-strong: #C3CDDA;
+    --accent: #2A62C4; --accent-fill: #2A62C4; --accent-on: #FFFFFF;
+    --accent-hover: #22539F; --accent-active: #1C4585;
+    --accent-wash: rgba(42, 98, 196, 0.10);
+    --mkt-up: #D93025; --mkt-down: #0C7B54; --mkt-flat: #6B7787;
+    --mkt-up-wash: rgba(217,  48,  37, 0.09);
+    --mkt-down-wash: rgba(12, 123,  84, 0.09);
+    --mkt-flat-wash: rgba(107, 119, 135, 0.08);
+    --st-ok: #12758A; --st-warn: #96690F; --st-fail: #C0334F; --st-idle: #6B7787;
+    --st-ok-fill: #12758A; --st-warn-fill: #96690F;
+    --st-fail-fill: #C0334F; --st-idle-fill: #6B7787;
+    --st-ok-wash: rgba(18, 117, 138, 0.10);
+    --st-warn-wash: rgba(150, 105, 15, 0.10);
+    --st-fail-wash: rgba(192, 51, 79, 0.10);
+    --st-idle-wash: rgba(107, 119, 135, 0.08);
+    --chart-1: #3D72B8; --chart-2: #2F7F77; --chart-3: #96762F;
+    --chart-4: #66707F; --chart-5: #8E5C48; --chart-6: #4F6291;
+    --chart-axis: #C3CDDA; --chart-split: #EBEFF5; --chart-label: #5A697C;
+    --chart-crosshair: #33404F; --chart-tooltip-bg: #FFFFFF;
+    --elev-overlay: 0 8px 24px rgba(16, 21, 29, 0.12);
+    color-scheme: light;
+  }
+}
+
+/* ==========================================================================
+   COLOR-VISION-DEFICIENCY SAFE PALETTE  (opt-in)
+   <html data-palette="cvd">
+   Market: RED up / BLUE down (an existing CN accessibility convention).
+   Status: blue / orange binary encoding, no red-green pair anywhere.
+   ========================================================================== */
+:root[data-palette="cvd"] {
+  --mkt-up:        #F6564B;
+  --mkt-down:      #4D9BE6;
+  --mkt-up-wash:   rgba(246,  86,  75, 0.12);
+  --mkt-down-wash: rgba( 77, 155, 230, 0.12);
+
+  --st-ok:   #7FA0C4;
+  --st-warn: #E0952E;
+  --st-fail: #E8631C;
+  --st-idle: #5E6B7E;
+
+  --st-ok-fill:   #3D5A7A;
+  --st-warn-fill: #8A6417;
+  --st-fail-fill: #9C4110;
+}
+
+/* ==========================================================================
+   ACCESSIBILITY TOKEN OVERRIDES
+   Only token values change here — no component selectors. The focus-visible
+   and reduced-motion rules were moved to static/dashboard.css (BLOCKING-5 /
+   O-10: tokens.css must stay a pure declaration table).
+   ========================================================================== */
+
+@media (prefers-contrast: more) {
+  :root, :root[data-theme="dark"] {
+    --border: #3A4759;
+    --border-soft: #2A3444;
+    --muted: #9BA9BD;
+    --meta: #8593A7;
+  }
+  :root[data-theme="light"] {
+    --border: #A9B6C6;
+    --border-soft: #C9D3DF;
+    --muted: #47576B;
+    --meta: #5A697C;
+  }
+}
+
+/* ==========================================================================
+   TOUCH TARGETS  (< 768px: density bump only; component min-height rules
+   live in static/dashboard.css per BLOCKING-4 / O-10)
+   ========================================================================== */
+@media (max-width: 767px) {
+  :root {
+    --row-h: 36px;
+    --text-sm: 14px;
+  }
+}

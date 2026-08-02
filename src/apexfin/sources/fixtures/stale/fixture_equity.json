@@ -1,0 +1,308 @@
+{
+  "source_name": "fixture_equity",
+  "domain": "equity",
+  "tier": "risk_essential",
+  "frequency": "DAILY",
+  "records": [
+    {
+      "symbol": "AAPL",
+      "event_time": "2026-06-18T20:00:00Z",
+      "open": 230.54,
+      "high": 231.7,
+      "low": 229.54,
+      "close": 230.96,
+      "volume": 58964211,
+      "unit": "usd"
+    },
+    {
+      "symbol": "AAPL",
+      "event_time": "2026-06-22T20:00:00Z",
+      "open": 230.94,
+      "high": 231.96,
+      "low": 226.69,
+      "close": 229.24,
+      "volume": 44392087,
+      "unit": "usd"
+    },
+    {
+      "symbol": "AAPL",
+      "event_time": "2026-06-23T20:00:00Z",
+      "open": 228.95,
+      "high": 230.2,
+      "low": 225.93,
+      "close": 226.61,
+      "volume": 50989041,
+      "unit": "usd"
+    },
+    {
+      "symbol": "AAPL",
+      "event_time": "2026-06-24T20:00:00Z",
+      "open": 227.09,
+      "high": 230.75,
+      "low": 225.28,
+      "close": 229.39,
+      "volume": 43027383,
+      "unit": "usd"
+    },
+    {
+      "symbol": "AAPL",
+      "event_time": "2026-06-25T20:00:00Z",
+      "open": 229.87,
+      "high": 231.69,
+      "low": 225.05,
+      "close": 226.13,
+      "volume": 42572589,
+      "unit": "usd"
+    },
+    {
+      "symbol": "AAPL",
+      "event_time": "2026-06-26T20:00:00Z",
+      "open": 226.45,
+      "high": 228.07,
+      "low": 223.23,
+      "close": 223.54,
+      "volume": 47843603,
+      "unit": "usd"
+    },
+    {
+      "symbol": "AAPL",
+      "event_time": "2026-06-29T20:00:00Z",
+      "open": 223.21,
+      "high": 224.94,
+      "low": 218.47,
+      "close": 220.35,
+      "volume": 58652787,
+      "unit": "usd"
+    },
+    {
+      "symbol": "AAPL",
+      "event_time": "2026-06-30T20:00:00Z",
+      "open": 220.58,
+      "high": 224.45,
+      "low": 218.37,
+      "close": 223.37,
+      "volume": 43037965,
+      "unit": "usd"
+    },
+    {
+      "symbol": "AAPL",
+      "event_time": "2026-07-01T20:00:00Z",
+      "open": 224.01,
+      "high": 224.59,
+      "low": 222.25,
+      "close": 222.74,
+      "volume": 56616250,
+      "unit": "usd"
+    },
+    {
+      "symbol": "AAPL",
+      "event_time": "2026-07-02T20:00:00Z",
+      "open": 222.56,
+      "high": 226.55,
+      "low": 221.28,
+      "close": 223.96,
+      "volume": 46877513,
+      "unit": "usd"
+    },
+    {
+      "symbol": "AAPL",
+      "event_time": "2026-07-06T20:00:00Z",
+      "open": 224.7,
+      "high": 229.04,
+      "low": 223.72,
+      "close": 228.28,
+      "volume": 51939386,
+      "unit": "usd"
+    },
+    {
+      "symbol": "AAPL",
+      "event_time": "2026-07-07T20:00:00Z",
+      "open": 227.48,
+      "high": 228.98,
+      "low": 224.35,
+      "close": 226.19,
+      "volume": 40268733,
+      "unit": "usd"
+    },
+    {
+      "symbol": "AAPL",
+      "event_time": "2026-07-08T20:00:00Z",
+      "open": 226.2,
+      "high": 231.99,
+      "low": 225.12,
+      "close": 229.34,
+      "volume": 43661236,
+      "unit": "usd"
+    },
+    {
+      "symbol": "AAPL",
+      "event_time": "2026-07-09T20:00:00Z",
+      "open": 229.36,
+      "high": 231.5,
+      "low": 226.71,
+      "close": 230.31,
+      "volume": 65011667,
+      "unit": "usd"
+    },
+    {
+      "symbol": "AAPL",
+      "event_time": "2026-07-10T20:00:00Z",
+      "open": 229.88,
+      "high": 232.31,
+      "low": 226.57,
+      "close": 228.3,
+      "volume": 51010051,
+      "unit": "usd"
+    },
+    {
+      "symbol": "AAPL",
+      "event_time": "2026-07-13T20:00:00Z",
+      "open": 229.15,
+      "high": 229.56,
+      "low": 223.33,
+      "close": 225.27,
+      "volume": 63505320,
+      "unit": "usd"
+    },
+    {
+      "symbol": "AAPL",
+      "event_time": "2026-07-14T20:00:00Z",
+      "open": 224.43,
+      "high": 229.53,
+      "low": 222.26,
+      "close": 228.21,
+      "volume": 43071028,
+      "unit": "usd"
+    },
+    {
+      "symbol": "AAPL",
+      "event_time": "2026-07-15T20:00:00Z",
+      "open": 228.02,
+      "high": 230.2,
+      "low": 223.13,
+      "close": 224.39,
+      "volume": 42516584,
+      "unit": "usd"
+    },
+    {
+      "symbol": "AAPL",
+      "event_time": "2026-07-16T20:00:00Z",
+      "open": 225.03,
+      "high": 226.73,
+      "low": 223.57,
+      "close": 224.98,
+      "volume": 66514810,
+      "unit": "usd"
+    },
+    {
+      "symbol": "AAPL",
+      "event_time": "2026-07-17T20:00:00Z",
+      "open": 225.23,
+      "high": 226.49,
+      "low": 222.9,
+      "close": 224.81,
+      "volume": 65455363,
+      "unit": "usd"
+    },
+    {
+      "symbol": "AAPL",
+      "event_time": "2026-07-20T20:00:00Z",
+      "open": 225.53,
+      "high": 229.57,
+      "low": 225.12,
+      "close": 227.22,
+      "volume": 59832294,
+      "unit": "usd"
+    },
+    {
+      "symbol": "AAPL",
+      "event_time": "2026-07-21T20:00:00Z",
+      "open": 227.65,
+      "high": 229.73,
+      "low": 223.39,
+      "close": 224.94,
+      "volume": 66704395,
+      "unit": "usd"
+    },
+    {
+      "symbol": "AAPL",
+      "event_time": "2026-07-22T20:00:00Z",
+      "open": 224.67,
+      "high": 225.69,
+      "low": 222.45,
+      "close": 223.35,
+      "volume": 63205923,
+      "unit": "usd"
+    },
+    {
+      "symbol": "AAPL",
+      "event_time": "2026-07-23T20:00:00Z",
+      "open": 222.65,
+      "high": 225.9,
+      "low": 220.56,
+      "close": 224.54,
+      "volume": 63719065,
+      "unit": "usd"
+    },
+    {
+      "symbol": "AAPL",
+      "event_time": "2026-07-24T20:00:00Z",
+      "open": 225.43,
+      "high": 228.23,
+      "low": 224.61,
+      "close": 227.7,
+      "volume": 54745975,
+      "unit": "usd"
+    },
+    {
+      "symbol": "AAPL",
+      "event_time": "2026-07-27T20:00:00Z",
+      "open": 228.26,
+      "high": 229.11,
+      "low": 226.95,
+      "close": 227.8,
+      "volume": 43102021,
+      "unit": "usd"
+    },
+    {
+      "symbol": "AAPL",
+      "event_time": "2026-07-28T20:00:00Z",
+      "open": 227.27,
+      "high": 231.77,
+      "low": 224.63,
+      "close": 229.29,
+      "volume": 49064170,
+      "unit": "usd"
+    },
+    {
+      "symbol": "AAPL",
+      "event_time": "2026-07-29T20:00:00Z",
+      "open": 229.31,
+      "high": 231.96,
+      "low": 224.87,
+      "close": 227.5,
+      "volume": 52981205,
+      "unit": "usd"
+    },
+    {
+      "symbol": "AAPL",
+      "event_time": "2026-07-30T20:00:00Z",
+      "open": 227.65,
+      "high": 228.64,
+      "low": 225.41,
+      "close": 228.05,
+      "volume": 49684506,
+      "unit": "usd"
+    },
+    {
+      "symbol": "AAPL",
+      "event_time": "2026-07-31T20:00:00Z",
+      "open": 227.18,
+      "high": 229.78,
+      "low": 225.18,
+      "close": 227.2,
+      "volume": 55216927,
+      "unit": "usd"
+    }
+  ]
+}

@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>APEXFIN 设计系统规格页</title>
+
+<!-- 直接引用交付的 token 文件：这一页同时是 tokens.css 的活体测试 -->
+<link rel="stylesheet" href="./tokens.css">
+
+<style>
+/* ==========================================================================
+   Component layer — 对应 DESIGN.md 第 4 节。零硬编码颜色。
+   ========================================================================== */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg-2);
+  font: var(--weight-read) var(--text-md)/var(--leading-body) var(--font-ui);
+}
+.wrap {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--gutter-desktop) var(--space-16);
+}
+
+/* ---- top bar ---- */
+.topbar {
+  position: sticky; top: 0; z-index: 20;
+  height: var(--topbar-h);
+  display: flex; align-items: center; gap: var(--space-4);
+  padding: 0 var(--gutter-desktop);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+.brand {
+  font: var(--weight-announce) var(--text-lg)/1 var(--font-data);
+  letter-spacing: 0.04em; color: var(--fg);
+}
+.brand span { color: var(--muted); font-weight: var(--weight-read); }
+.topbar__sep { width: 1px; height: 18px; background: var(--border-strong); }
+.topbar__meta {
+  font: var(--weight-read) var(--text-xs)/1 var(--font-data);
+  color: var(--meta);
+}
+.topbar__right { margin-left: auto; display: flex; align-items: center; gap: var(--space-2); }
+
+/* ---- section / panel ---- */
+.section { margin-top: var(--section-y-desktop); }
+.section > h2 {
+  margin: 0 0 var(--space-3);
+  font: var(--weight-announce) var(--text-xl)/1.3 var(--font-ui);
+  letter-spacing: -0.01em; color: var(--fg);
+}
+.section > .lede {
+  margin: 0 0 var(--space-4);
+  max-width: 76ch;
+  font-size: var(--text-lg);      /* 长段落强制 16px */
+  line-height: var(--leading-body);
+  color: var(--fg-2);
+}
+.grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: var(--grid-gap); }
+.c12 { grid-column: span 12; } .c8 { grid-column: span 8; }
+.c6  { grid-column: span 6; }  .c4 { grid-column: span 4; }
+
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--elev-flat);
+  overflow: hidden;
+}
+.panel__head {
+  height: var(--panel-head-h);
+  display: flex; align-items: center; gap: var(--space-2);
+  padding: 0 var(--panel-pad);
+  border-bottom: 1px solid var(--border-strong);
+  font: var(--weight-announce) var(--text-lg)/1.3 var(--font-ui);
+  color: var(--fg);
+}
+.panel__head .ico { color: var(--muted); }
+.panel__head-meta {
+  margin-left: auto;
+  font: var(--weight-read) var(--text-xs)/1 var(--font-data);
+  color: var(--meta);
+}
+.panel__body { padding: var(--panel-pad); }
+.panel__body--flush { padding: 0; }
+.panel[data-state="degraded"] { box-shadow: inset 0 2px 0 0 var(--st-warn); }
+.panel[data-state="blocked"] { box-shadow: inset 0 2px 0 0 var(--st-fail); }
+
+/* ---- icons ---- */
+.ico { width: var(--icon-sm); height: var(--icon-sm); flex: none;
+       fill: none; stroke: currentColor; stroke-width: 2;
+       stroke-linecap: round; stroke-linejoin: round; }
+.ico--md { width: var(--icon-md); height: var(--icon-md); }
+.ico--lg { width: var(--icon-lg); height: var(--icon-lg); }
+
+/* ---- status ---- */
+.status { display: inline-flex; align-items: center; gap: var(--space-1);
+          font: var(--weight-emph) var(--text-xs)/1.3 var(--font-ui); white-space: nowrap; }
+.status[data-s="healthy"]   { color: var(--st-ok); }
+.status[data-s="degraded"] { color: var(--st-warn); }
+.status[data-s="blocked"] { color: var(--st-fail); }
+.status[data-s="unknown"] { color: var(--st-idle); }
+
+.badge { display: inline-flex; align-items: center; gap: 4px;
+         height: 20px; padding: 0 6px; border-radius: var(--radius-xs);
+         font: var(--weight-emph) var(--text-2xs)/1 var(--font-ui);
+         letter-spacing: var(--tracking-caps); text-transform: uppercase; }
+.badge[data-s="healthy"]   { background: var(--st-ok-fill);   color: #fff; }
+.badge[data-s="degraded"] { background: var(--st-warn-fill); color: #fff; }
+.badge[data-s="blocked"] { background: var(--st-fail-fill); color: #fff; }
+.badge[data-s="unknown"] { background: var(--st-idle-fill); color: var(--fg-2); }
+
+/* ---- market delta ---- */
+.delta { font-family: var(--font-data); font-variant-numeric: tabular-nums;
+         font-weight: var(--weight-emph); text-align: right; white-space: nowrap; }
+.delta[data-d="up"]   { color: var(--mkt-up); }
+.delta[data-d="down"] { color: var(--mkt-down); }
+.delta[data-d="flat"] { color: var(--mkt-flat); }
+.delta::before { margin-right: 4px; font-weight: var(--weight-read); }
+.delta[data-d="up"]::before   { content: "\25B2"; }
+.delta[data-d="down"]::before { content: "\25BC"; }
+.delta[data-d="flat"]::before { content: "\2014"; }
+
+/* ---- table ---- */
+.tbl { width: 100%; border-collapse: collapse; }
+.tbl caption { text-align: left; }
+.tbl th {
+  height: var(--row-h); padding: 0 var(--cell-px);
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--border-strong);
+  font: var(--weight-emph) var(--text-xs)/1.3 var(--font-ui);
+  letter-spacing: var(--tracking-caps); text-transform: uppercase;
+  color: var(--muted); text-align: left; white-space: nowrap;
+}
+.tbl td {
+  height: var(--row-h); padding: 0 var(--cell-px);
+  border-bottom: 1px solid var(--border-soft);
+  font: var(--weight-read) var(--text-sm)/var(--leading-data) var(--font-ui);
+  color: var(--fg-2);
+}
+.tbl td:first-child { color: var(--fg); font-weight: var(--weight-emph); }
+.tbl tbody tr:hover td { background: var(--surface-2); }
+.tbl tbody tr:last-child td { border-bottom: 0; }
+.tbl .unit { font-size: var(--text-2xs); color: var(--meta); margin-left: 2px; }
+
+/* ---- quality gate matrix (signature visual) ---- */
+.qgate th.qgate__col {
+  text-align: center; width: 44px; padding: 4px 2px; height: 40px;
+  line-height: 1.15; text-transform: none; letter-spacing: 0;
+}
+.qgate th.qgate__col em {
+  display: block; font-style: normal;
+  font: var(--weight-read) var(--text-2xs)/1.2 var(--font-data);
+  letter-spacing: var(--tracking-caps); color: var(--meta); text-transform: uppercase;
+}
+.qgate td.qgate__cell { height: var(--row-h-compact); text-align: center; padding: 0; }
+.qgate td.qgate__cell > span { display: inline-flex; padding: 3px; border-radius: var(--radius-xs); }
+.qgate td.qgate__cell > span:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+.qgate .pass-rate { display: flex; align-items: center; gap: var(--space-2); justify-content: flex-end; }
+.bar { width: 56px; height: 3px; border-radius: 2px; background: var(--surface-3); overflow: hidden; }
+.bar > i { display: block; height: 100%; border-radius: 2px; }
+.bar[data-s="healthy"]   > i { background: var(--st-ok); }
+.bar[data-s="degraded"] > i { background: var(--st-warn); }
+.bar[data-s="blocked"] > i { background: var(--st-fail); }
+
+/* ---- freshness rail ---- */
+.rail { display: flex; flex-wrap: wrap; gap: 0; }
+.rail__item {
+  flex: 1 1 200px; min-width: 0;
+  padding: var(--space-3) var(--panel-pad);
+  border-right: 1px solid var(--border-soft);
+}
+.rail__item:last-child { border-right: 0; }
+.rail__name { font: var(--weight-emph) var(--text-sm)/1.3 var(--font-data); color: var(--fg);
+              overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rail__row  { display: flex; align-items: center; gap: var(--space-2); margin-top: 5px; }
+.rail__date { margin-left: auto; font: var(--weight-read) var(--text-xs)/1 var(--font-data); color: var(--fg-2); }
+.rail__bar  { margin-top: 6px; height: 4px; border-radius: 2px; background: var(--surface-3); overflow: hidden; }
+.rail__bar > i { display: block; height: 100%; }
+.rail__item[data-s="healthy"]   .rail__bar > i { background: var(--st-ok); }
+.rail__item[data-s="degraded"] .rail__bar > i { background: var(--st-warn); }
+.rail__item[data-s="blocked"] .rail__bar > i { background: var(--st-fail); }
+.rail__bar[data-overdue="true"] > i { background: var(--st-fail); }  /* 超期配色认 overdue，可不同于 state 色 */
+.rail__sla { margin-top: 4px; font: var(--weight-read) var(--text-2xs)/1 var(--font-data); color: var(--meta); }
+.rail__empty { margin-top: 6px; font: var(--weight-read) var(--text-2xs)/1.4 var(--font-ui); color: var(--meta); }
+
+/* ---- swatches ---- */
+.sw { display: grid; grid-template-columns: repeat(auto-fill, minmax(168px, 1fr)); gap: var(--space-2); }
+.sw__i { border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; }
+.sw__c { height: 44px; }
+.sw__t { padding: 6px 8px; background: var(--surface-2); }
+.sw__n { font: var(--weight-emph) var(--text-xs)/1.3 var(--font-ui); color: var(--fg); }
+.sw__v { font: var(--weight-read) var(--text-2xs)/1.4 var(--font-data); color: var(--meta); }
+
+/* ---- buttons ---- */
+.btn { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 10px;
+       border-radius: var(--radius-md); border: 1px solid transparent; cursor: pointer;
+       font: var(--weight-emph) var(--text-xs)/1 var(--font-ui);
+       transition: background var(--motion-fast) var(--ease-standard),
+                   border-color var(--motion-fast) var(--ease-standard),
+                   color var(--motion-fast) var(--ease-standard); }
+.btn--primary { background: var(--accent-fill); color: var(--accent-on); }
+.btn--primary:hover { background: var(--accent-hover); }
+.btn--secondary { background: transparent; border-color: var(--border-strong); color: var(--fg-2); }
+.btn--secondary:hover { background: var(--surface-2); border-color: var(--accent); color: var(--fg); }
+.btn--ghost { background: transparent; color: var(--muted); }
+.btn--ghost:hover { background: var(--surface-2); color: var(--fg); }
+.btn[disabled] { opacity: .45; cursor: not-allowed; }
+
+/* ---- details ---- */
+details { border-top: 1px solid var(--border-soft); }
+details > summary { cursor: pointer; list-style: none; display: flex; align-items: center; gap: 6px;
+  height: var(--row-h); padding: 0 var(--cell-px);
+  font: var(--weight-emph) var(--text-xs)/1 var(--font-ui); color: var(--muted); }
+details > summary::-webkit-details-marker { display: none; }
+details > summary:hover { background: var(--surface-2); color: var(--fg); }
+details > summary .ico { transition: transform var(--motion-base) var(--ease-standard); }
+details[open] > summary .ico { transform: rotate(90deg); }
+details .details__body { padding: var(--space-3) var(--cell-px); background: var(--surface-2);
+  font-size: var(--text-sm); color: var(--fg-2); }
+
+/* ---- notice ---- */
+.notice { display: flex; align-items: flex-start; gap: var(--space-2);
+  padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm);
+  font: var(--weight-read) var(--text-xs)/1.5 var(--font-ui); }
+.notice[data-s="degraded"] { background: var(--st-warn-wash); color: var(--st-warn); }
+.notice[data-s="healthy"]   { background: var(--st-ok-wash);   color: var(--st-ok); }
+
+.legend { display: flex; flex-wrap: wrap; gap: var(--space-4);
+  padding: var(--space-2) var(--panel-pad); border-top: 1px solid var(--border-soft); }
+.note { font: var(--weight-read) var(--text-xs)/1.6 var(--font-ui); color: var(--meta); }
+.kbd { font: var(--weight-emph) var(--text-2xs)/1 var(--font-data);
+  border: 1px solid var(--border-strong); border-radius: var(--radius-xs);
+  padding: 3px 5px; color: var(--fg-2); }
+
+footer { margin-top: var(--section-y-desktop); padding-top: var(--space-4);
+  border-top: 1px solid var(--border); font: var(--weight-read) var(--text-xs)/1.7 var(--font-data);
+  color: var(--meta); }
+.run-footer { margin-bottom: var(--space-4); padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--border); font: var(--weight-emph) var(--text-xs)/1.5 var(--font-data);
+  color: var(--fg-2); letter-spacing: .01em; }
+
+@media (max-width: 1023px) { .c8, .c6, .c4 { grid-column: span 12; } }
+@media (max-width: 767px)  {
+  .wrap, .topbar { padding-left: var(--gutter-phone); padding-right: var(--gutter-phone); }
+  .section { margin-top: var(--section-y-phone); }
+  .tbl-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+}
+</style>
+</head>
+<body>
+
+<!-- Lucide icon sprite (ISC). 生产环境由 scripts/build_icon_sprite.py 生成并内联。 -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <symbol id="icon-check-circle-2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></symbol>
+  <symbol id="icon-alert-triangle" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></symbol>
+  <symbol id="icon-x-octagon" viewBox="0 0 24 24"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></symbol>
+  <symbol id="icon-circle-dashed" viewBox="0 0 24 24"><path d="M10.1 2.18a9.93 9.93 0 0 1 3.8 0"/><path d="M17.6 3.71a9.95 9.95 0 0 1 2.69 2.7"/><path d="M21.82 10.1a9.93 9.93 0 0 1 0 3.8"/><path d="M20.29 17.6a9.95 9.95 0 0 1-2.7 2.69"/><path d="M13.9 21.82a9.94 9.94 0 0 1-3.8 0"/><path d="M6.4 20.29a9.95 9.95 0 0 1-2.69-2.7"/><path d="M2.18 13.9a9.93 9.93 0 0 1 0-3.8"/><path d="M3.71 6.4a9.95 9.95 0 0 1 2.7-2.69"/></symbol>
+  <symbol id="icon-database" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/><path d="M3 12a9 3 0 0 0 18 0"/></symbol>
+  <symbol id="icon-shield-check" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></symbol>
+  <symbol id="icon-candlestick-chart" viewBox="0 0 24 24"><path d="M9 5v4"/><rect x="7" y="9" width="4" height="6" rx="1"/><path d="M9 15v2"/><path d="M17 3v2"/><rect x="15" y="5" width="4" height="8" rx="1"/><path d="M17 13v3"/><path d="M3 3v16a2 2 0 0 0 2 2h16"/></symbol>
+  <symbol id="icon-activity" viewBox="0 0 24 24"><path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"/></symbol>
+  <symbol id="icon-layers" viewBox="0 0 24 24"><path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/></symbol>
+  <symbol id="icon-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></symbol>
+  <symbol id="icon-chevron-right" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+  <symbol id="icon-line-chart" viewBox="0 0 24 24"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="m19 9-5 5-4-4-3 3"/></symbol>
+  <symbol id="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></symbol>
+  <symbol id="icon-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></symbol>
+  <symbol id="icon-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></symbol>
+</defs></svg>
+
+<header class="topbar">
+  <div class="brand">APEXFIN <span>/ 设计系统规格页</span></div>
+  <div class="topbar__sep"></div>
+  <div class="topbar__meta">数据截止 2026&#8209;08&#8209;02 14:03 +08</div>
+  <div class="topbar__sep"></div>
+  <span class="status" data-s="degraded"><svg class="ico"><use href="#icon-alert-triangle"/></svg>全局健康 22/24</span>
+  <div class="topbar__right">
+    <span class="topbar__meta">run f3a91c2</span>
+    <button class="btn btn--ghost" id="themeBtn" aria-label="切换浅色主题">
+      <svg class="ico ico--md" aria-hidden="true"><use href="#icon-sun"/></svg>浅色
+    </button>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- ============ 1. 双通道色彩隔离 ============ -->
+  <section class="section">
+    <h2>1. 双通道色彩隔离协议</h2>
+    <p class="lede">
+      看板同时存在两套冲突的红绿语义：行情上红涨绿跌（中国 A 股惯例），工程上红失败绿通过。
+      两者对绿色的解读完全相反。解法是三层隔离：状态通道放弃绿色改用青（色相差 29.3°，彻底消除最致命的绿色歧义）；
+      行情色只能给数字上色，状态色只能给图标和填充上色；任何状态都同时带形状不同的图标和文字标签。
+    </p>
+
+    <div class="grid">
+      <div class="c6">
+        <div class="panel">
+          <div class="panel__head">
+            <svg class="ico ico--md" aria-hidden="true"><use href="#icon-candlestick-chart"/></svg>
+            通道 M · 行情方向
+            <span class="panel__head-meta">高彩度 / 仅数字</span>
+          </div>
+          <div class="panel__body panel__body--flush">
+            <table class="tbl">
+              <caption class="sr-only">行情通道演示：红涨绿跌，颜色仅作用于等宽数字</caption>
+              <thead><tr>
+                <th scope="col">标的</th><th scope="col" class="num">最新价</th>
+                <th scope="col" class="num">涨跌额</th><th scope="col" class="num">涨跌幅</th>
+              </tr></thead>
+              <tbody>
+                <tr><td>NVDA</td><td class="num">183.47</td>
+                    <td class="delta" data-d="up">+3.89</td><td class="delta" data-d="up">+2.17%</td></tr>
+                <tr><td>000001.SS</td><td class="num">3,412.77</td>
+                    <td class="delta" data-d="up">+21.36</td><td class="delta" data-d="up">+0.63%</td></tr>
+                <tr><td>SPY</td><td class="num">634.18</td>
+                    <td class="delta" data-d="up">+2.65</td><td class="delta" data-d="up">+0.42%</td></tr>
+                <tr><td>QQQ</td><td class="num">566.03</td>
+                    <td class="delta" data-d="down">&#8722;1.76</td><td class="delta" data-d="down">&#8722;0.31%</td></tr>
+                <tr><td>0700.HK</td><td class="num">612.50</td>
+                    <td class="delta" data-d="down">&#8722;7.69</td><td class="delta" data-d="down">&#8722;1.24%</td></tr>
+                <tr><td>GLD</td><td class="num">341.02</td>
+                    <td class="delta" data-d="flat">0.00</td><td class="delta" data-d="flat">0.00%</td></tr>
+              </tbody>
+            </table>
+            <div class="legend note">
+              红 = 涨 / 绿 = 跌 / 灰 = 平。负号用 U+2212 而非连字符，保证等宽对齐。
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="c6">
+        <div class="panel">
+          <div class="panel__head">
+            <svg class="ico ico--md" aria-hidden="true"><use href="#icon-shield-check"/></svg>
+            通道 S · 系统状态
+            <span class="panel__head-meta">低彩度 / 仅图标与填充</span>
+          </div>
+          <div class="panel__body panel__body--flush">
+            <table class="tbl">
+              <caption class="sr-only">状态通道演示：四态各有不同轮廓形状的图标与文字标签</caption>
+              <thead><tr>
+                <th scope="col">语义</th><th scope="col">指示器</th>
+                <th scope="col">徽章</th><th scope="col">触发条件</th>
+              </tr></thead>
+              <tbody>
+                <tr><td>健康</td>
+                    <td><span class="status" data-s="healthy"><svg class="ico"><use href="#icon-check-circle-2"/></svg>正常</span></td>
+                    <td><span class="badge" data-s="healthy">healthy</span></td>
+                    <td>检查通过，数据在 SLA 内</td></tr>
+                <tr><td>警告</td>
+                    <td><span class="status" data-s="degraded"><svg class="ico"><use href="#icon-alert-triangle"/></svg>陈旧</span></td>
+                    <td><span class="badge" data-s="degraded">degraded</span></td>
+                    <td>超 SLA 未超硬阈值</td></tr>
+                <tr><td>失败</td>
+                    <td><span class="status" data-s="blocked"><svg class="ico"><use href="#icon-x-octagon"/></svg>失败</span></td>
+                    <td><span class="badge" data-s="blocked">blocked</span></td>
+                    <td>质量门拦截，采集异常</td></tr>
+                <tr><td>未知</td>
+                    <td><span class="status" data-s="unknown"><svg class="ico"><use href="#icon-circle-dashed"/></svg>未运行</span></td>
+                    <td><span class="badge" data-s="unknown">unknown</span></td>
+                    <td>步骤跳过，本次未调度</td></tr>
+              </tbody>
+            </table>
+            <div class="legend note">
+              健康用青而非绿 —— 绿色已被"下跌"占用。四种图标轮廓（圆+勾 / 三角 / 八边形 / 虚线圆）互不相同，色觉障碍用户仅凭形状即可分辨。
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 2. 数据健康度总览 ============ -->
+  <section class="section">
+    <h2>2. 数据健康度总览（首屏第一个内容块，无 Hero 区）</h2>
+    <div class="panel" data-state="degraded">
+      <div class="panel__head">
+        <svg class="ico ico--md" aria-hidden="true"><use href="#icon-database"/></svg>
+        数据源新鲜度
+        <span class="panel__head-meta">6 源 · 1 阻断 · 2 降级</span>
+      </div>
+      <div class="rail">
+        <div class="rail__item" data-s="healthy">
+          <div class="rail__name">yahoo/equity</div>
+          <div class="rail__row"><span class="status" data-s="healthy"><svg class="ico"><use href="#icon-check-circle-2"/></svg>正常</span>
+            <span class="rail__date" title="2026-07-31">最后数据 07-31（周五）</span></div>
+          <div class="rail__bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="1"
+               aria-label="yahoo/equity lag 0 / 阈值 1 交易日"><i style="width:0%"></i></div>
+          <div class="rail__sla">阈值 1 交易日 &middot; 余 1</div>
+        </div>
+        <div class="rail__item" data-s="healthy">
+          <div class="rail__name">yahoo/index</div>
+          <div class="rail__row"><span class="status" data-s="healthy"><svg class="ico"><use href="#icon-check-circle-2"/></svg>正常</span>
+            <span class="rail__date" title="2026-07-31">最后数据 07-31（周五）</span></div>
+          <div class="rail__bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="1"
+               aria-label="yahoo/index lag 0 / 阈值 1 交易日"><i style="width:0%"></i></div>
+          <div class="rail__sla">阈值 1 交易日 &middot; 余 1</div>
+        </div>
+        <div class="rail__item" data-s="degraded">
+          <div class="rail__name">fred/rates</div>
+          <div class="rail__row"><span class="status" data-s="degraded"><svg class="ico"><use href="#icon-alert-triangle"/></svg>陈旧</span>
+            <span class="rail__date" title="2026-07-30">最后数据 07-30（周四）</span></div>
+          <div class="rail__bar" role="progressbar" aria-valuenow="1" aria-valuemin="0" aria-valuemax="1"
+               aria-label="fred/rates lag 1 / 阈值 1 交易日（临界，未超期）"><i style="width:100%"></i></div>
+          <div class="rail__sla">阈值 1 交易日 &middot; 余 0</div>
+        </div>
+        <div class="rail__item" data-s="blocked">
+          <div class="rail__name">fred/cpi</div>
+          <div class="rail__row"><span class="status" data-s="blocked"><svg class="ico"><use href="#icon-x-octagon"/></svg>失败</span>
+            <span class="rail__date" title="2026-07-29">最后数据 07-29（周三）</span></div>
+          <div class="rail__bar" data-overdue="true" role="progressbar" aria-valuenow="1" aria-valuemin="0" aria-valuemax="1"
+               aria-label="fred/cpi 已超阈值 1 个交易日（lag 2 / 阈值 1）"><i style="width:100%"></i></div>
+          <div class="rail__sla">阈值 1 交易日 &middot; 超 1</div>
+        </div>
+        <div class="rail__item" data-s="degraded">
+          <div class="rail__name">fixture/vol</div>
+          <div class="rail__row"><span class="status" data-s="degraded"><svg class="ico"><use href="#icon-alert-triangle"/></svg>降级</span>
+            <span class="rail__date" title="2026-07-29">最后数据 07-29（周三）</span></div>
+          <div class="rail__bar" data-overdue="true" role="progressbar" aria-valuenow="1" aria-valuemin="0" aria-valuemax="1"
+               aria-label="fixture/vol 已超阈值 1 个交易日（support 档：状态降级非阻断）"><i style="width:100%"></i></div>
+          <div class="rail__sla">阈值 1 交易日 &middot; 超 1 &middot; support</div>
+        </div>
+        <div class="rail__item" data-s="unknown">
+          <div class="rail__name">fred/new</div>
+          <div class="rail__row"><span class="status" data-s="unknown"><svg class="ico"><use href="#icon-circle-dashed"/></svg>未知</span>
+            <span class="rail__date">&mdash;</span></div>
+          <div class="rail__empty">从未采集（建库后首跑）&middot; 进度条不渲染</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 3. 质量门矩阵 ============ -->
+  <section class="section">
+    <h2>3. 质量门矩阵（看板的签名视觉）</h2>
+    <p class="lede">
+      6 类检查 × N 个数据源的矩阵，单元格是 16px 状态图标。这是别人抄不走的图形 ——
+      它的形状完全由 APEXFIN 的数据治理模型决定，而不是从模板库里挑的卡片布局。
+    </p>
+    <div class="grid">
+      <div class="c8">
+        <div class="panel">
+          <div class="panel__head">
+            <svg class="ico ico--md" aria-hidden="true"><use href="#icon-shield-check"/></svg>
+            质量门检查结果
+            <span class="panel__head-meta">22/24 通过</span>
+          </div>
+          <div class="panel__body panel__body--flush">
+            <div class="tbl-scroll">
+            <table class="tbl qgate">
+              <caption class="sr-only">质量门矩阵：4 个数据源 × 6 类检查的通过状态</caption>
+              <thead><tr>
+                <th scope="col">数据源</th>
+                <th scope="col" class="qgate__col">新鲜度<em>fresh</em></th>
+                <th scope="col" class="qgate__col">完整性<em>compl</em></th>
+                <th scope="col" class="qgate__col">重复性<em>dup</em></th>
+                <th scope="col" class="qgate__col">一致性<em>consist</em></th>
+                <th scope="col" class="qgate__col">连续性<em>contin</em></th>
+                <th scope="col" class="qgate__col">合理性<em>range</em></th>
+                <th scope="col" class="num">通过率</th>
+              </tr></thead>
+              <tbody>
+                <tr>
+                  <th scope="row" style="background:none;border-bottom:1px solid var(--border-soft);text-transform:none;letter-spacing:0;font-family:var(--font-data);font-size:var(--text-sm);color:var(--fg)">yahoo/equity</th>
+                  <td class="qgate__cell"><span tabindex="0" class="status" data-s="healthy" role="img" aria-label="yahoo/equity 新鲜度：通过" title="yahoo/equity · 新鲜度：通过（lag 0 交易日 / 阈值 1 交易日）"><svg class="ico"><use href="#icon-check-circle-2"/></svg></span></td>
+                  <td class="qgate__cell"><span tabindex="0" class="status" data-s="healthy" role="img" aria-label="yahoo/equity 完整性：通过" title="yahoo/equity · 完整性：通过（缺失率 0.00% / 阈值 1%）"><svg class="ico"><use href="#icon-check-circle-2"/></svg></span></td>
+                  <td class="qgate__cell"><span tabindex="0" class="status" data-s="healthy" role="img" aria-label="yahoo/equity 重复性：通过" title="yahoo/equity · 重复性：通过（重复行 0）"><svg class="ico"><use href="#icon-check-circle-2"/></svg></span></td>
+                  <td class="qgate__cell"><span tabindex="0" class="status" data-s="healthy" role="img" aria-label="yahoo/equity 一致性：通过" title="yahoo/equity · 一致性：通过（OHLC 关系全部成立）"><svg class="ico"><use href="#icon-check-circle-2"/></svg></span></td>
+                  <td class="qgate__cell"><span tabindex="0" class="status" data-s="degraded" role="img" aria-label="yahoo/equity 时序连续性：警告" title="yahoo/equity · 时序连续性：警告（缺 1 个交易日：2026-07-28，疑似交易所休市）"><svg class="ico"><use href="#icon-alert-triangle"/></svg></span></td>
+                  <td class="qgate__cell"><span tabindex="0" class="status" data-s="healthy" role="img" aria-label="yahoo/equity 数值合理性：通过" title="yahoo/equity · 数值合理性：通过（无负价、无零成交量）"><svg class="ico"><use href="#icon-check-circle-2"/></svg></span></td>
+                  <td class="num"><span class="pass-rate"><span>5/6</span><span class="bar" data-s="degraded"><i style="width:83.3%"></i></span></span></td>
+                </tr>
+                <tr>
+                  <th scope="row" style="background:none;border-bottom:1px solid var(--border-soft);text-transform:none;letter-spacing:0;font-family:var(--font-data);font-size:var(--text-sm);color:var(--fg)">yahoo/index</th>
+                  <td class="qgate__cell"><span tabindex="0" class="status" data-s="healthy" role="img" aria-label="yahoo/index 新鲜度：通过" title="yahoo/index · 新鲜度：通过（lag 0 交易日 / 阈值 1 交易日）"><svg class="ico"><use href="#icon-check-circle-2"/></svg></span></td>
+                  <td class="qgate__cell"><span tabindex="0" class="status" data-s="healthy" role="img" aria-label="yahoo/index 完整性：通过" title="yahoo/index · 完整性：通过（缺失率 0.00%）"><svg class="ico"><use href="#icon-check-circle-2"/></svg></span></td>
+                  <td class="qgate__cell"><span tabindex="0" class="status" data-s="healthy" role="img" aria-label="yahoo/index 重复性：通过" title="yahoo/index · 重复性：通过"><svg class="ico"><use href="#icon-check-circle-2"/></svg></span></td>
+                  <td class="qgate__cell"><span tabindex="0" class="status" data-s="healthy" role="img" aria-label="yahoo/index 一致性：通过" title="yahoo/index · 一致性：通过"><svg class="ico"><use href="#icon-check-circle-2"/></svg></span></td>
+                  <td class="qgate__cell"><span tabindex="0" class="status" data-s="healthy" role="img" aria-label="yahoo/index 时序连续性：通过" title="yahoo/index · 时序连续性：通过"><svg class="ico"><use href="#icon-check-circle-2"/></svg></span></td>
+                  <td class="qgate__cell"><span tabindex="0" class="status" data-s="healthy" role="img" aria-label="yahoo/index 数值合理性：通过" title="yahoo/index · 数值合理性：通过"><svg class="ico"><use href="#icon-check-circle-2"/></svg></span></td>
+                  <td class="num"><span class="pass-rate"><span>6/6</span><span class="bar" data-s="healthy"><i style="width:100%"></i></span></span></td>
+                </tr>
+                <tr>
+                  <th scope="row" style="background:none;border-bottom:1px solid var(--border-soft);text-transform:none;letter-spacing:0;font-family:var(--font-data);font-size:var(--text-sm);color:var(--fg)">fred/rates</th>
+                  <td class="qgate__cell"><span tabindex="0" class="status" data-s="healthy" role="img" aria-label="fred/rates 新鲜度：通过" title="fred/rates · 新鲜度：通过（lag 0 交易日 / 阈值 1 交易日）"><svg class="ico"><use href="#icon-check-circle-2"/></svg></span></td>
+                  <td class="qgate__cell"><span tabindex="0" class="status" data-s="healthy" role="img" aria-label="fred/rates 完整性：通过" title="fred/rates · 完整性：通过（缺失率 0.00%）"><svg class="ico"><use href="#icon-check-circle-2"/></svg></span></td>
+                  <td class="qgate__cell"><span tabindex="0" class="status" data-s="healthy" role="img" aria-label="fred/rates 重复性：通过" title="fred/rates · 重复性：通过"><svg class="ico"><use href="#icon-check-circle-2"/></svg></span></td>
+                  <td class="qgate__cell"><span tabindex="0" class="status" data-s="healthy" role="img" aria-label="fred/rates 一致性：通过" title="fred/rates · 一致性：通过（DGS10 与 T10Y2Y 推导一致）"><svg class="ico"><use href="#icon-check-circle-2"/></svg></span></td>
+                  <td class="qgate__cell"><span tabindex="0" class="status" data-s="healthy" role="img" aria-label="fred/rates 时序连续性：通过" title="fred/rates · 时序连续性：通过"><svg class="ico"><use href="#icon-check-circle-2"/></svg></span></td>
+                  <td class="qgate__cell"><span tabindex="0" class="status" data-s="healthy" role="img" aria-label="fred/rates 数值合理性：通过" title="fred/rates · 数值合理性：通过（利率区间 0-25%）"><svg class="ico"><use href="#icon-check-circle-2"/></svg></span></td>
+                  <td class="num"><span class="pass-rate"><span>6/6</span><span class="bar" data-s="healthy"><i style="width:100%"></i></span></span></td>
+                </tr>
+                <tr>
+                  <th scope="row" style="background:none;border-bottom:0;text-transform:none;letter-spacing:0;font-family:var(--font-data);font-size:var(--text-sm);color:var(--fg)">fred/cpi</th>
+                  <td class="qgate__cell"><span tabindex="0" class="status" data-s="blocked" role="img" aria-label="fred/cpi 新鲜度：失败" title="fred/cpi · 新鲜度：失败（lag 2 交易日 / 阈值 1 交易日，超 1 交易日）"><svg class="ico"><use href="#icon-x-octagon"/></svg></span></td>
+                  <td class="qgate__cell"><span tabindex="0" class="status" data-s="healthy" role="img" aria-label="fred/cpi 完整性：通过" title="fred/cpi · 完整性：通过（缺失率 0.00%）"><svg class="ico"><use href="#icon-check-circle-2"/></svg></span></td>
+                  <td class="qgate__cell"><span tabindex="0" class="status" data-s="healthy" role="img" aria-label="fred/cpi 重复性：通过" title="fred/cpi · 重复性：通过"><svg class="ico"><use href="#icon-check-circle-2"/></svg></span></td>
+                  <td class="qgate__cell"><span tabindex="0" class="status" data-s="healthy" role="img" aria-label="fred/cpi 一致性：通过" title="fred/cpi · 一致性：通过"><svg class="ico"><use href="#icon-check-circle-2"/></svg></span></td>
+                  <td class="qgate__cell"><span tabindex="0" class="status" data-s="healthy" role="img" aria-label="fred/cpi 时序连续性：通过" title="fred/cpi · 时序连续性：通过（月频，无缺月）"><svg class="ico"><use href="#icon-check-circle-2"/></svg></span></td>
+                  <td class="qgate__cell"><span tabindex="0" class="status" data-s="unknown" role="img" aria-label="fred/cpi 数值合理性：未运行" title="fred/cpi · 数值合理性：未运行（前置检查失败，本项跳过）"><svg class="ico"><use href="#icon-circle-dashed"/></svg></span></td>
+                  <td class="num"><span class="pass-rate"><span>4/6</span><span class="bar" data-s="blocked"><i style="width:66.7%"></i></span></span></td>
+                </tr>
+              </tbody>
+            </table>
+            </div>
+            <div class="legend">
+              <span class="status" data-s="healthy"><svg class="ico"><use href="#icon-check-circle-2"/></svg>通过</span>
+              <span class="status" data-s="degraded"><svg class="ico"><use href="#icon-alert-triangle"/></svg>警告</span>
+              <span class="status" data-s="blocked"><svg class="ico"><use href="#icon-x-octagon"/></svg>失败</span>
+              <span class="status" data-s="unknown"><svg class="ico"><use href="#icon-circle-dashed"/></svg>未运行</span>
+              <span class="note">每格可 <span class="kbd">Tab</span> 聚焦，悬停或聚焦查看期望值与实际值</span>
+            </div>
+            <details>
+              <summary><svg class="ico" aria-hidden="true"><use href="#icon-chevron-right"/></svg>失败详情 · fred/cpi 新鲜度</summary>
+              <div class="details__body">
+                <strong style="color:var(--fg)">期望</strong>：lag &lt; 1 交易日<br>
+                <strong style="color:var(--fg)">实际</strong>：lag 2 交易日（最后成功更新 2026&#8209;08&#8209;01 09:41:27 +08:00）<br>
+                <strong style="color:var(--fg)">影响</strong>：下游"数值合理性"检查已跳过；决策层已降级使用 T&#8209;1 缓存<br>
+                <strong style="color:var(--fg)">处理</strong>：<span class="kbd">make collect SOURCE=fred SERIES=CPIAUCSL</span>
+              </div>
+            </details>
+          </div>
+        </div>
+      </div>
+
+      <div class="c4">
+        <div class="panel">
+          <div class="panel__head">
+            <svg class="ico ico--md" aria-hidden="true"><use href="#icon-line-chart"/></svg>
+            宏观指标
+            <span class="panel__head-meta">fred</span>
+          </div>
+          <div class="panel__body panel__body--flush">
+            <table class="tbl">
+              <caption class="sr-only">FRED 宏观指标最新值</caption>
+              <thead><tr><th scope="col">序列</th><th scope="col" class="num">最新值</th><th scope="col" class="num">环比</th></tr></thead>
+              <tbody>
+                <tr><td>DGS10</td><td class="num">4.18<span class="unit">%</span></td><td class="num" style="color:var(--fg-2)">+0.03</td></tr>
+                <tr><td>FEDFUNDS</td><td class="num">4.33<span class="unit">%</span></td><td class="num" style="color:var(--fg-2)">0.00</td></tr>
+                <tr><td>UNRATE</td><td class="num">4.10<span class="unit">%</span></td><td class="num" style="color:var(--fg-2)">+0.10</td></tr>
+                <tr><td>T10Y2Y</td><td class="num">0.34</td><td class="num" style="color:var(--fg-2)">&#8722;0.02</td></tr>
+                <tr><td>CPIAUCSL</td><td class="num">2.90<span class="unit">%</span></td><td class="num" style="color:var(--meta)">&#8212;</td></tr>
+              </tbody>
+            </table>
+            <div class="legend note">
+              宏观数据不使用行情红绿 —— 避免暗示"CPI 上升 = 好消息"。环比列用中性 <code>--fg-2</code>。
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 4. 降级演示 ============ -->
+  <section class="section">
+    <h2>4. 离线降级</h2>
+    <div class="grid">
+      <div class="c12">
+        <div class="panel">
+          <div class="panel__head">
+            <svg class="ico ico--md" aria-hidden="true"><use href="#icon-activity"/></svg>
+            价格走势
+            <span class="panel__head-meta">SPY &middot; 日线</span>
+          </div>
+          <div class="panel__body" style="padding-bottom:0">
+            <div class="notice" data-s="degraded">
+              <svg class="ico" aria-hidden="true" style="margin-top:2px"><use href="#icon-alert-triangle"/></svg>
+              <span>图表引擎未加载，已降级为数据表。本页为设计规格页，未引入 ECharts —— 这正是生产环境断网时用户会看到的形态：<strong>页面依然是一份完整可读的报告</strong>。</span>
+            </div>
+          </div>
+          <details open>
+            <summary><svg class="ico" aria-hidden="true"><use href="#icon-chevron-right"/></svg>数据表 · SPY 最近 5 个交易日</summary>
+            <div class="details__body" style="padding:0">
+              <table class="tbl">
+                <caption class="sr-only">SPY 最近 5 个交易日 OHLC 与涨跌幅</caption>
+                <thead><tr><th scope="col">日期</th><th scope="col" class="num">开盘</th><th scope="col" class="num">最高</th>
+                  <th scope="col" class="num">最低</th><th scope="col" class="num">收盘</th>
+                  <th scope="col" class="num">成交量</th><th scope="col" class="num">涨跌幅</th></tr></thead>
+                <tbody>
+                  <tr data-d="up"><td>2026&#8209;08&#8209;01</td><td class="num">631.42</td><td class="num">635.07</td><td class="num">630.88</td><td class="num">634.18</td><td class="num">47,218,660</td><td class="delta" data-d="up">+0.42%</td></tr>
+                  <tr data-d="down"><td>2026&#8209;07&#8209;31</td><td class="num">633.90</td><td class="num">634.51</td><td class="num">629.03</td><td class="num">631.53</td><td class="num">52,904,113</td><td class="delta" data-d="down">&#8722;0.37%</td></tr>
+                  <tr data-d="up"><td>2026&#8209;07&#8209;30</td><td class="num">628.11</td><td class="num">634.62</td><td class="num">627.44</td><td class="num">633.87</td><td class="num">61,337,902</td><td class="delta" data-d="up">+0.91%</td></tr>
+                  <tr data-d="down"><td>2026&#8209;07&#8209;29</td><td class="num">630.75</td><td class="num">631.20</td><td class="num">627.06</td><td class="num">628.15</td><td class="num">44,092,571</td><td class="delta" data-d="down">&#8722;0.28%</td></tr>
+                  <tr data-d="up"><td>2026&#8209;07&#8209;28</td><td class="num">627.33</td><td class="num">630.94</td><td class="num">626.19</td><td class="num">629.91</td><td class="num">39,776,204</td><td class="delta" data-d="up">+0.53%</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </details>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 5. 色板 ============ -->
+  <section class="section">
+    <h2>5. 色板</h2>
+    <div class="grid">
+      <div class="c6"><div class="panel"><div class="panel__head"><svg class="ico ico--md" aria-hidden="true"><use href="#icon-layers"/></svg>表面与前景阶梯</div>
+        <div class="panel__body"><div class="sw">
+          <div class="sw__i"><div class="sw__c" style="background:var(--bg)"></div><div class="sw__t"><div class="sw__n">--bg</div><div class="sw__v">页面底</div></div></div>
+          <div class="sw__i"><div class="sw__c" style="background:var(--surface)"></div><div class="sw__t"><div class="sw__n">--surface</div><div class="sw__v">面板</div></div></div>
+          <div class="sw__i"><div class="sw__c" style="background:var(--surface-2)"></div><div class="sw__t"><div class="sw__n">--surface-2</div><div class="sw__v">表头 / hover</div></div></div>
+          <div class="sw__i"><div class="sw__c" style="background:var(--surface-3)"></div><div class="sw__t"><div class="sw__n">--surface-3</div><div class="sw__v">选中</div></div></div>
+          <div class="sw__i"><div class="sw__c" style="background:var(--fg)"></div><div class="sw__t"><div class="sw__n">--fg</div><div class="sw__v">15.4:1</div></div></div>
+          <div class="sw__i"><div class="sw__c" style="background:var(--fg-2)"></div><div class="sw__t"><div class="sw__n">--fg-2</div><div class="sw__v">9.2:1</div></div></div>
+          <div class="sw__i"><div class="sw__c" style="background:var(--muted)"></div><div class="sw__t"><div class="sw__n">--muted</div><div class="sw__v">5.5:1</div></div></div>
+          <div class="sw__i"><div class="sw__c" style="background:var(--meta)"></div><div class="sw__t"><div class="sw__n">--meta</div><div class="sw__v">3.5:1 受限用途</div></div></div>
+        </div></div></div>
+      </div>
+      <div class="c6"><div class="panel"><div class="panel__head"><svg class="ico ico--md" aria-hidden="true"><use href="#icon-activity"/></svg>语义色（两通道）</div>
+        <div class="panel__body"><div class="sw">
+          <div class="sw__i"><div class="sw__c" style="background:var(--mkt-up)"></div><div class="sw__t"><div class="sw__n">--mkt-up</div><div class="sw__v">涨 &middot; 5.4:1 &middot; hue 3.9&deg;</div></div></div>
+          <div class="sw__i"><div class="sw__c" style="background:var(--mkt-down)"></div><div class="sw__t"><div class="sw__n">--mkt-down</div><div class="sw__v">跌 &middot; 7.5:1 &middot; hue 160&deg;</div></div></div>
+          <div class="sw__i"><div class="sw__c" style="background:var(--st-ok)"></div><div class="sw__t"><div class="sw__n">--st-ok</div><div class="sw__v">健康 &middot; 5.5:1 &middot; hue 189&deg;</div></div></div>
+          <div class="sw__i"><div class="sw__c" style="background:var(--st-warn)"></div><div class="sw__t"><div class="sw__n">--st-warn</div><div class="sw__v">警告 &middot; 7.0:1</div></div></div>
+          <div class="sw__i"><div class="sw__c" style="background:var(--st-fail)"></div><div class="sw__t"><div class="sw__n">--st-fail</div><div class="sw__v">失败 &middot; 4.6:1 &middot; hue 350&deg;</div></div></div>
+          <div class="sw__i"><div class="sw__c" style="background:var(--st-idle)"></div><div class="sw__t"><div class="sw__n">--st-idle</div><div class="sw__v">未知</div></div></div>
+          <div class="sw__i"><div class="sw__c" style="background:var(--accent)"></div><div class="sw__t"><div class="sw__n">--accent</div><div class="sw__v">仅"可交互" &middot; 每屏 &le;2 处</div></div></div>
+          <div class="sw__i"><div class="sw__c" style="background:var(--chart-1)"></div><div class="sw__t"><div class="sw__n">--chart-1</div><div class="sw__v">中性序列</div></div></div>
+          <div class="sw__i"><div class="sw__c" style="background:var(--chart-2)"></div><div class="sw__t"><div class="sw__n">--chart-2</div><div class="sw__v">宏观专用</div></div></div>
+          <div class="sw__i"><div class="sw__c" style="background:var(--chart-3)"></div><div class="sw__t"><div class="sw__n">--chart-3</div><div class="sw__v">多序列</div></div></div>
+          <div class="sw__i"><div class="sw__c" style="background:var(--chart-4)"></div><div class="sw__t"><div class="sw__n">--chart-4</div><div class="sw__v">不抢语义</div></div></div>
+          <div class="sw__i"><div class="sw__c" style="background:var(--chart-5)"></div><div class="sw__t"><div class="sw__n">--chart-5</div><div class="sw__v">色相分离</div></div></div>
+          <div class="sw__i"><div class="sw__c" style="background:var(--chart-6)"></div><div class="sw__t"><div class="sw__n">--chart-6</div><div class="sw__v">彼此可辨</div></div></div>
+        </div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 6. 组件与排版 ============ -->
+  <section class="section">
+    <h2>6. 组件与排版</h2>
+    <div class="grid">
+      <div class="c6"><div class="panel"><div class="panel__head">按钮与焦点</div>
+        <div class="panel__body" style="display:flex;gap:var(--space-2);flex-wrap:wrap;align-items:center">
+          <button class="btn btn--primary"><svg class="ico ico--md" aria-hidden="true"><use href="#icon-download"/></svg>导出 CSV</button>
+          <button class="btn btn--secondary"><svg class="ico ico--md" aria-hidden="true"><use href="#icon-clock"/></svg>查看历史</button>
+          <button class="btn btn--ghost">重置筛选</button>
+          <button class="btn btn--secondary" disabled>重跑管道</button>
+          <span class="note" style="flex-basis:100%">按 <span class="kbd">Tab</span> 遍历，焦点环为 2px 底色 + 2px accent，不可移除。</span>
+        </div></div>
+      </div>
+      <div class="c6"><div class="panel"><div class="panel__head">数字排版铁律</div>
+        <div class="panel__body">
+          <div style="font-family:var(--font-data);font-variant-numeric:tabular-nums;font-size:var(--text-3xl);font-weight:var(--weight-announce);letter-spacing:var(--tracking-display);color:var(--fg);line-height:var(--leading-tight)">
+            22<span style="color:var(--meta);font-weight:var(--weight-read)">/24</span>
+          </div>
+          <div class="note" style="margin-top:2px">质量门通过数 / 总检查数</div>
+          <table class="tbl" style="margin-top:var(--space-3)">
+            <caption class="sr-only">等宽数字对齐演示</caption>
+            <tbody>
+              <tr><td>比例数字（错误）</td><td class="num" style="font-variant-numeric:proportional-nums">1,203.40</td></tr>
+              <tr><td>等宽数字（正确）</td><td class="num">1,203.40</td></tr>
+              <tr><td>等宽数字（正确）</td><td class="num">47,218.06</td></tr>
+              <tr><td>连字符当负号（错误）</td><td class="num">-0.31%</td></tr>
+              <tr><td>U+2212 减号（正确）</td><td class="num">&#8722;0.31%</td></tr>
+            </tbody>
+          </table>
+        </div></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="run-footer">上次采集完成 2026&#8209;08&#8209;02 14:03（+08:00）&middot; 耗时 1m12s &middot; run f3a91c2</div>
+    APEXFIN 设计系统 v1.0 &middot; 本页引用 <code>./tokens.css</code>，是该交付文件的活体测试<br>
+    示例数据为演示占位，格式对齐 Yahoo Finance / FRED 公开接口的真实字段结构<br>
+    完整规范见 <code>docs/DESIGN.md</code> &middot; 机器可读 Token 见 <code>docs/design-tokens.json</code>
+  </footer>
+</div>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var btn  = document.getElementById('themeBtn');
+  var saved = null;
+  try { saved = localStorage.getItem('apexfin-theme'); } catch (e) {}
+  if (saved) root.setAttribute('data-theme', saved);
+
+  function sync() {
+    var dark = root.getAttribute('data-theme') !== 'light';
+    btn.innerHTML = '<svg class="ico ico--md" aria-hidden="true"><use href="#icon-'
+      + (dark ? 'sun' : 'moon') + '"/></svg>' + (dark ? '浅色' : '深色');
+    btn.setAttribute('aria-label', dark ? '切换到浅色主题' : '切换到深色主题');
+  }
+  btn.addEventListener('click', function () {
+    var next = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+    root.setAttribute('data-theme', next);
+    try { localStorage.setItem('apexfin-theme', next); } catch (e) {}
+    sync();
+    document.dispatchEvent(new CustomEvent('apexfin:theme-change'));
+  });
+  sync();
+})();
+</script>
+</body>
+</html>

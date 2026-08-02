@@ -1,0 +1,42 @@
+# APEXFIN .gitignore
+#
+# 决策：dist/ 不入库。理由——README/SPEC 的 demo 指引均为「make demo 生成
+# dist/index.html」（render 幂等、可再生成），仓库不预置构建产物，避免每次
+# demo 后 dist 变更污染 git；与 ARCHITECTURE §8.1「.gitignore 覆盖 dist/」
+# 一致。GitHub Pages 预览如需 dist，由 CI 在 make demo 后生成并发布产物，
+# 不依赖仓库内预置。
+
+# 依赖
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# 内部工作产物（team-lead 笔记/fixlist/交付草稿，不进公开仓库）
+.workbuddy/
+
+# 环境与密钥
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+
+# 运行时数据与产物
+data/
+*.db
+*.db-shm
+*.db-wal
+dist/
+
+# 构建与日志
+*.log
+build/
+*.egg-info/
+
+# IDE 与系统
+.idea/
+.vscode/
+.DS_Store

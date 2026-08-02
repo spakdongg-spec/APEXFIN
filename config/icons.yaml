@@ -1,0 +1,65 @@
+# APEXFIN icon whitelist — the single source of truth for tools/build_sprite.py
+#
+# Source of names: docs/DESIGN.md Appendix A. The two lists MUST NOT drift;
+# DESIGN.md is upstream, this file is downstream.
+#
+# SEMANTIC LOCK (OPEN-DECISIONS O-02, ADR-007 Addendum, verified 2026-08-02):
+#   Every name below returned HTTP 200 from lucide-static@1.28.0 (27/27).
+#   Old names are NOT uniformly aliases of new names:
+#     x-octagon      == octagon-x        same path, true alias
+#     alert-triangle == triangle-alert   same path, true alias
+#     check-circle-2 != circle-check-big DIFFERENT glyph (closed circle + small
+#                                        tick vs. open arc + oversized tick)
+#     table-2        != table            DIFFERENT glyph (notched grid vs. 3-line)
+#   Therefore these strings are semantic values, not normalizable identifiers.
+#   Do NOT bulk-rename. Any rename requires a side-by-side visual diff at 16px
+#   and a new config/icons.lock hash review.
+
+lucide_version: "1.28.0"
+
+# Sprite symbols are emitted as <symbol id="icon-<name>">.
+icons:
+
+  # --- Four-state status. Outlines must stay mutually distinguishable at 16px,
+  #     because colour is only the third encoding (WCAG 1.4.1).
+  - check-circle-2          # healthy  -> --st-ok
+  - alert-triangle          # degraded -> --st-warn
+  - x-octagon               # blocked  -> --st-fail
+  - circle-dashed           # unknown  -> --st-idle
+
+  # --- Data and pipeline
+  - database
+  - layers
+  - activity
+  - filter
+  - shield-check
+  - git-commit-horizontal
+
+  # --- Time and process
+  - clock
+  - refresh-cw
+  - loader                  # pipeline state RUNNING (pulsed via CSS)
+
+  # --- Charts
+  - candlestick-chart
+  - line-chart
+  - table-2
+
+  # --- Direction (reserve; the visible direction marks are U+25B2/25BC/2014)
+  - trending-up
+  - trending-down
+  - minus
+
+  # --- Interaction
+  - chevron-down
+  - chevron-right
+  - external-link
+  - info
+  - download
+
+  # --- Theme
+  - sun
+  - moon
+
+  # --- Fallback
+  - circle-slash

@@ -1,0 +1,38 @@
+# APEXFIN source catalog (O-01).
+#
+# Declares which series the pipeline is accountable for. The collector ids must
+# match the `apexfin.sources` registrations; the fixture collector replays
+# committed JSON files from src/apexfin/sources/fixtures/ (offline demo path,
+# zero network, zero credentials). Both sources here are enabled so the default
+# `collect` run exercises the offline demo end to end.
+
+version: 1
+
+sources:
+  - name: fixture_equity
+    domain: equity
+    collector: fixture
+    frequency: daily
+    enabled: true
+    reliability: 1.0
+    requires_credentials: false
+    min_request_interval_s: 0
+    symbols:
+      - id: AAPL
+        label: Apple Inc. (offline sample)
+        unit: usd
+        tier: risk_essential
+
+  - name: fixture_macro
+    domain: macro
+    collector: fixture
+    frequency: daily
+    enabled: true
+    reliability: 1.0
+    requires_credentials: false
+    min_request_interval_s: 0
+    symbols:
+      - id: CPI
+        label: US CPI YoY percent change (offline sample)
+        unit: percent
+        tier: support
