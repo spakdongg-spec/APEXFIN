@@ -45,8 +45,8 @@ dev = [
 apexfin = "apexfin.cli.app:main"
 
 [project.urls]
-Homepage = "https://github.com/apexfin/apexfin"
-Source = "https://github.com/apexfin/apexfin"
+Homepage = "https://github.com/spakdongg-spec/APEXFIN"
+Source = "https://github.com/spakdongg-spec/APEXFIN"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/apexfin"]
