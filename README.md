@@ -14,23 +14,23 @@
 [![MIT licensed vendored deps](https://img.shields.io/badge/Vendored-Apache--2.0%20%2F%20ISC-lightgrey.svg)](NOTICE)
 
 APEXFIN is the engineering skeleton behind a production multi-role analyst
-system, distilled into something you can fork in an afternoon. It ships a
+system, reduced to what you can fork and run in an afternoon. It ships a
 five-layer architecture with a hard "dependencies only point downward" rule, a
 quality gate that **blocks** the run when a series goes stale, a six-role
 analyst framework (technical / macro / options / COT / text / behavioral) that
 debates each holding and emits a PM verdict — and a static HTML dashboard that
 renders fully offline from a single JSON datapack.
 
-The analyst layer is the interesting part. Each role emits a direction, a
+The analyst layer is where the value is. Each role emits a direction, a
 confidence and evidence sentences; a bull researcher consolidates the long
 case, a bear researcher the short case, and the PM adjudicator weighs
 `confidence × role weight` into one verdict: **AFFIRM / MODIFY / REJECT**.
 Disagreement is surfaced, not averaged away — the dashboard shows the full
 debate for every holding, so the reader sees *why*, not just *what*.
 
-It is **not** an investment tool. The reference implementations ship to
-demonstrate the *shape* — real data sources and alpha are the fork's job, and
-the role contract makes that drop-in.
+It is **not** an investment tool. The reference implementations exist to make
+the framework runnable out of the box; real data sources and alpha are the
+fork's job, and the role contract makes that a drop-in.
 
 ---
 
@@ -38,10 +38,10 @@ the role contract makes that drop-in.
 
 | Other skeletons | APEXFIN |
 |---|---|
-| A real-time data pipeline that ships you to Grafana | A pipeline that ships to a *plain HTML file* you can open from `file://` |
-| "Connect Postgres and Prometheus" | A committed SQLite file; offline fixture mode with zero credentials |
+| A real-time pipeline that assumes you run Grafana | A pipeline that renders to a *plain HTML file*, openable from `file://` |
+| "Connect Postgres and Prometheus" | A committed SQLite file; an offline fixture mode that needs zero credentials |
 | One built-in strategy you can't read | Six analyst roles (technical / macro + options / COT / text / behavioral interfaces) feeding a bull/bear debate and a PM verdict, with full evidence text |
-| Quality "health" coloured bars | A six-check gate matrix (freshness / completeness / duplicates / consistency / continuity / range) that **blocks** the run and returns exit 4 on `make demo-stale` |
+| Quality shown as coloured health bars | A six-check gate matrix (freshness / completeness / duplicates / consistency / continuity / range) that **blocks** the run and returns exit 4 on `make demo-stale` |
 | "The dashboard is React" | A Jinja2 template + an inline dataclass JSON + an ECharts canvas, vendored locally — no CDN, no build step, no JS framework |
 
 ---
@@ -83,18 +83,18 @@ flowchart LR
     D --> J
 ```
 
-**The infrastructure is the project.** Five layers, each layer only importing
-downward. The decision engine is intentionally a *shape* — six analyst roles
-and a debate engine that surfaces disagreement as `MODIFY` / `no_call`, not a
-fabricated average. Replace the `technical` analyst with your own implementation
-or wire a real options/CFTC collector into the uncovered roles, and the debate
-engine, PM verdict and dashboard pick it up unchanged.
+**The architecture is the product.** Five layers, each layer only importing
+downward. The decision engine is intentionally a *framework* — six analyst
+roles and a debate engine that surfaces disagreement as `MODIFY` / `no_call`,
+not a fabricated average. Replace the `technical` analyst with your own
+implementation or wire a real options/CFTC collector into the uncovered roles,
+and the debate engine, PM verdict and dashboard pick it up unchanged.
 
 ---
 
 ## The decision layer: analyst roles + bull/bear debate
 
-The decision layer ports the **analyst-role shape** from APEXDATA (a mature
+The decision layer ports the **analyst-role contract** from APEXDATA (a mature
 production system): per-symbol analyst roles emit a direction, a confidence and
 evidence sentences; a bull researcher consolidates the long evidence, a bear
 researcher the short evidence, and a PM adjudicator weighs
@@ -110,10 +110,10 @@ Analyst roles shipped (fixture-driven; fork to wire real sources):
 |---|---|---|
 | `technical` | own price series | momentum + trend-regime fusion |
 | `macro` | VIX / 10Y yield / CPI | risk-on / risk-off regime |
-| `options` | — | interface shape, "未覆盖" until a real option source is wired |
-| `cot` | — | interface shape, "未覆盖" until a COT source is wired |
-| `text` | — | interface shape, "未覆盖" until a news factor is wired |
-| `behavioral` | — | interface shape, "未覆盖" until a behavioural source is wired |
+| `options` | — | contract only — reports "not covered" until a real option source is wired |
+| `cot` | — | contract only — reports "not covered" until a COT source is wired |
+| `text` | — | contract only — reports "not covered" until a news factor is wired |
+| `behavioral` | — | contract only — reports "not covered" until a behavioural source is wired |
 
 Every decision on the dashboard shows the **full debate**: each analyst's
 stance and evidence, the bull case, the bear case, the rebuttal, risk notes,
@@ -131,7 +131,7 @@ SPY: 无观点 (no_call)
 ```
 
 The role interface is `AnalystView` (direction / confidence / evidence / note)
-— the same shape APEXDATA uses — so a fork can drop in a real options or COT
+— the same contract APEXDATA uses — so a fork can drop in a real options or COT
 collector and the debate engine, the PM adjudicator and the dashboard all work
 unchanged.
 
@@ -162,7 +162,7 @@ make test && make lint && make typecheck  # verification suite
 |---|---|---|
 | **L1 core** | Contracts, models, enums, frozen clock, error taxonomy | 6 modules |
 | **L2 storage** | SQLite engine, migrations, raw / silver / bronze / health / run / decision repos | 7 modules |
-| **L3** | 6 quality checks + analyst roles + debate engine + aggregator | 16 modules |
+| **L3** | 6 quality checks + analyst roles + debate engine | 16 modules |
 | **L4 pipeline** | 7 steps registered via `@step` with `@step` decorator ParameterSpec generics | 8 modules |
 | **L5 output** | Typer CLI + Jinja2 render + dataclass `DataPack` + JSON schema | 12 modules |
 | **Tests** | 12 tests including 3 regression fixtures for the `demo-stale` contract | 5 files |
@@ -199,9 +199,9 @@ engine.
   WCAG 1.4.1 ("Use of Color"). Market direction (red-up / green-down, CN
   convention) and system status use strictly separated colour channels.
 - **No purple→pink gradient**, no glow + glassmorphism, no bounce / elastic
-  easing. The board is allowed to look controlled.
-- **`no_call` is a first-class outcome** — strategies that disagree produce
-  a documented decision, not a fabricated average (see `aggregator.py`).
+  easing. The dashboard reads as a terminal instrument, not a marketing page.
+- **`no_call` is a first-class outcome** — roles that disagree produce
+  a documented decision, not a fabricated average (see `debate.py`).
 
 ---
 
@@ -213,15 +213,16 @@ full attribution.
 
 ---
 
-## Demo contract — the regression test you're really buying
+## Demo contract — what CI actually verifies
 
 ```bash
 make demo        # exit 0, gate PASS
 make demo-stale  # exit 4, gate BLOCKED, decide SKIPPED
 ```
 
-Daily CI runs both. If either silently returns the wrong exit code, the
-gatekeeper is broken — and the dashboard is the only place you'd see it.
+CI runs both on every push. If either silently returns the wrong exit code,
+the quality gate is broken — and the dashboard is the only surface that would
+show it.
 
 ---
 

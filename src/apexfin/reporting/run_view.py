@@ -74,9 +74,9 @@ def build_decisions(decisions: Sequence[Decision]) -> list[DecisionRow]:
     point -- but its label says 无观点, not 中性. Those are different claims and
     the table has to keep them apart.
 
-    Each row also carries the per-strategy `signals` breakdown the aggregator
-    stored in `inputs["signals"]`, so the board shows the analysis chain (which
-    strategy said what) instead of only the aggregate verdict.
+    Each row also carries the per-strategy `signals` breakdown stored in
+    `inputs["signals"]`, so the board shows the analysis chain (which strategy
+    said what) instead of only the verdict.
     """
     rows: list[DecisionRow] = []
     for index, d in enumerate(decisions):

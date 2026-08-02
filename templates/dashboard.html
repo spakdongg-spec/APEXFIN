@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>APEXFIN · 数据健康看板</title>
-  <meta name="description" content="APEXFIN 数据工程流水线质量门看板：数据健康度、质量门矩阵、采集管道与决策输出。" />
+  <title>APEXFIN · 数据管道治理看板</title>
+  <meta name="description" content="APEXFIN 数据工程流水线治理看板：数据健康度、质量门矩阵、采集链路与多空辩论决策。" />
   <link rel="stylesheet" href="../static/tokens.css" />
   <link rel="stylesheet" href="../static/dashboard.css" />
   <script src="../static/vendor/echarts.min.js" defer></script>
@@ -20,7 +20,7 @@
     APEXFIN
   </div>
   <div class="topbar__meta">
-    <span>run <span class="num">{{ datapack.run_id }}</span></span>
+    <span>运行编号 <span class="num">{{ datapack.run_id }}</span></span>
     <div class="theme-toggle" role="group" aria-label="主题切换">
       <button type="button" data-theme-set="dark" aria-pressed="true" title="深色主题" aria-label="深色主题">
         <svg class="ico" aria-hidden="true"><use href="#icon-moon"></use></svg>
@@ -35,7 +35,7 @@
 <main id="main" class="shell">
 
   <noscript>
-    <div class="degrade-note">已禁用 JavaScript —— 下方数据表与文本构成一份完整可读的报告，图表需启用脚本后渲染。</div>
+    <div class="degrade-note">已禁用 JavaScript——数据表与文本本身构成完整可读的报告，图表需启用脚本后渲染。</div>
   </noscript>
 
   <!-- GATE VERDICT -->
@@ -127,7 +127,7 @@
               </div>
               <div class="bar__label">{{ row.freshness.label }}</div>
               {% else %}
-              <div class="health__note">{{ row.note or '从未采集（建库后首跑）' }}</div>
+              <div class="health__note">{{ row.note or '尚无采集记录（建库后首次运行）' }}</div>
               {% endif %}
             </div>
           </div>
@@ -139,7 +139,7 @@
 
   <!-- PIPELINE RUNS -->
   <section class="section" aria-labelledby="steps-h">
-    <h2 id="steps-h"><svg class="ico ico--muted" aria-hidden="true"><use href="#icon-git-commit-horizontal"></use></svg>采集管道</h2>
+    <h2 id="steps-h"><svg class="ico ico--muted" aria-hidden="true"><use href="#icon-git-commit-horizontal"></use></svg>采集与处理链路</h2>
     <div class="panel">
       <div class="panel__body">
         <div class="steps">
@@ -147,7 +147,7 @@
           <div class="step">
             <svg class="ico {{ 'ico--running' if step.status == 'running' else '' }}" aria-hidden="true"><use href="#icon-{{ step.icon_id }}"></use></svg>
             <div class="step__name">{{ step.step_name }}</div>
-            <span class="badge" data-s="unknown" title="采集层级：{{ step.tier }}">{{ step.tier }}</span>
+            <span class="badge" data-s="unknown" title="重要性层级：{{ step.tier }}">{{ step.tier }}</span>
             <span class="status" data-s="{{ step.status }}">{{ step.status_label }}</span>
             <div class="step__dur num">{% if step.duration_label is not none %}{{ step.duration_label }}{% else %}—{% endif %}</div>
           </div>
@@ -159,7 +159,7 @@
 
   <!-- DECISIONS -->
   <section class="section" aria-labelledby="dec-h">
-    <h2 id="dec-h"><svg class="ico ico--muted" aria-hidden="true"><use href="#icon-trending-up"></use></svg>决策输出 · 多空辩论</h2>
+    <h2 id="dec-h"><svg class="ico ico--muted" aria-hidden="true"><use href="#icon-trending-up"></use></svg>标的研判 · 多空辩论</h2>
     <div class="panel">
       <div class="panel__body">
         <div class="decisions">
@@ -268,7 +268,7 @@
     数据来源：Yahoo Finance、FRED。采集完成 <span class="num">{{ datapack.run_footer.finished_label }}</span>，
     耗时 <span class="num">{{ datapack.run_footer.duration_label }}</span>，运行编号 <span class="num">{{ datapack.run_id }}</span>。
   </p>
-  <p>决策输出为玩具级参考实现，仅用于演示管道链路，不构成任何投资建议。APEXFIN 以 MIT 许可证开源。</p>
+  <p>研判输出由参考实现生成，仅用于演示管道链路与分析师框架，不构成任何投资建议。APEXFIN 以 MIT 许可证开源。</p>
 </footer>
 
 <script id="apexfin-datapack" type="application/json">{{ datapack | tojson }}</script>

@@ -65,16 +65,16 @@ def _summarise(
     soft: Sequence[QualityFinding],
 ) -> str:
     if verdict is GateVerdict.PASS:
-        return "全部数据源通过 6 类质量检查，下游决策照常产出。"
+        return "全部数据源通过 6 类质量检查，本日研判可完整产出。"
     if verdict is GateVerdict.BLOCKED:
         names = ", ".join(sorted({f"{f.source_name}/{f.symbol}" for f in risk_blocking}))
         return (
-            f"风险必需数据源陈旧或异常（{names}），质量闸门判定 BLOCKED，"
-            "下游决策被阻断，看板渲染降级态以呈现故障。"
+            f"{names} 陈旧或异常，达到阻断阈值，质量闸门判定 BLOCKED——"
+            "研判被暂停，页面以故障态呈现，不产出带误导性的结论。"
         )
     # DEGRADED
     if soft:
         names = ", ".join(sorted({f"{f.source_name}/{f.symbol}" for f in soft}))
-        return f"非必需数据源降级（{names}），看板仍可用，建议择机重跑采集。"
+        return f"{names} 数据不完整（降级），页面仍可阅读，建议补充数据后重跑。"
     names = ", ".join(sorted({f"{f.source_name}/{f.symbol}" for f in risk_blocking}))
-    return f"部分风险必需项降级（{names}），看板仍可用，建议择机重跑采集。"
+    return f"{names} 出现降级，页面仍可阅读，建议补充数据后重跑。"
