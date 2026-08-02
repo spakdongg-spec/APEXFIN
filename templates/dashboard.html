@@ -159,7 +159,7 @@
 
   <!-- DECISIONS -->
   <section class="section" aria-labelledby="dec-h">
-    <h2 id="dec-h"><svg class="ico ico--muted" aria-hidden="true"><use href="#icon-trending-up"></use></svg>决策输出</h2>
+    <h2 id="dec-h"><svg class="ico ico--muted" aria-hidden="true"><use href="#icon-trending-up"></use></svg>决策输出 · 多空辩论</h2>
     <div class="panel">
       <div class="panel__body">
         <div class="decisions">
@@ -171,22 +171,46 @@
             </div>
             <div class="decision__body">
               <div class="decision__rationale">{{ d.rationale }}</div>
-              {% if d.signals %}
-              <ul class="decision__signals">
-                {% for s in d.signals %}
-                <li class="sig" data-d="{{ s.direction }}">
-                  <span class="sig__head">
-                    <span class="sig__name">{{ s.strategy }}</span>
-                    <span class="sig__dir" data-d="{{ s.direction }}">{{ '看多' if s.direction == 'long' else ('看空' if s.direction == 'short' else '中性') }}</span>
-                    <span class="sig__bar"><span class="sig__fill" style="width:{{ (s.strength * 100) | round }}%"></span></span>
-                    <span class="sig__str num">{{ (s.strength * 100) | round }}%</span>
-                  </span>
-                  <span class="sig__why">{{ s.rationale }}</span>
-                </li>
-                {% endfor %}
-              </ul>
+
+              {% if d.debate %}
+              <div class="debate">
+                <div class="debate__verdict" data-v="{{ d.debate.verdict_code }}">
+                  <span class="badge" data-s="{{ 'ok' if d.debate.verdict_code == 'AFFIRM' else ('warn' if d.debate.verdict_code == 'MODIFY' else 'blocked') }}">{{ d.debate.verdict_code }}</span>
+                  <span class="debate__why">{{ d.debate.verdict_why }}</span>
+                  <span class="debate__conv">信念 <span class="num">{{ d.debate.conviction_label }}</span> ({{ (d.debate.conviction * 100) | round }}%)</span>
+                </div>
+
+                {% if d.debate.analysts %}
+                <ul class="debate__analysts">
+                  {% for a in d.debate.analysts %}
+                  <li class="dan" data-a="{{ a.direction }}" data-av="{{ '1' if a.available else '0' }}">
+                    <span class="dan__role">{{ a.role }}</span>
+                    <span class="dan__dir" data-d="{{ a.direction }}">{{ '偏多' if a.direction == 'long' else ('偏空' if a.direction == 'short' else ('中性' if a.direction == 'flat' else '未覆盖')) }}</span>
+                    {% if a.available %}<span class="dan__conf num">{{ a.confidence | round }}%</span>{% endif %}
+                    <span class="dan__why">
+                      {%- if a.evidence %}{{ a.evidence | join('；') }}{% else %}{{ a.note }}{% endif -%}
+                    </span>
+                  </li>
+                  {% endfor %}
+                </ul>
+                {% endif %}
+
+                <div class="debate__cases">
+                  <div class="dcase" data-s="up">
+                    <div class="dcase__head">多头剧本</div>
+                    <div class="dcase__body">{{ d.debate.bull_case }}</div>
+                  </div>
+                  <div class="dcase" data-s="down">
+                    <div class="dcase__head">空头剧本</div>
+                    <div class="dcase__body">{{ d.debate.bear_case }}</div>
+                  </div>
+                </div>
+                <div class="debate__rebuttal">{{ d.debate.rebuttal }}</div>
+                {% if d.debate.risk_notes %}<div class="debate__risk">风险：{{ d.debate.risk_notes }}</div>{% endif %}
+              </div>
               {% endif %}
-              <div class="decision__foot">得分 <span class="num">{{ d.score }}</span> · 截至 {{ d.as_of }} · {{ d.decision_id }}</div>
+
+              <div class="decision__foot">截至 {{ d.as_of }} · {{ d.decision_id }}</div>
             </div>
           </div>
           {% endfor %}

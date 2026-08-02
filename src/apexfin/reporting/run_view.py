@@ -14,7 +14,15 @@ from typing import Any
 from apexfin.core.clock import parse_utc, to_utc_iso
 from apexfin.core.enums import STANCE_PRESENTATION, GateVerdict
 from apexfin.core.models import Decision
-from apexfin.reporting.models import DecisionRow, Notice, RunFooter, SignalDetail, StepRow
+from apexfin.reporting.models import (
+    DebateAnalyst,
+    DebateDetail,
+    DecisionRow,
+    Notice,
+    RunFooter,
+    SignalDetail,
+    StepRow,
+)
 from apexfin.reporting.state_maps import STATUS_PRESENTATION
 
 _UNKNOWN_STATUS = ("未知", "circle-dashed")
@@ -99,9 +107,43 @@ def build_decisions(decisions: Sequence[Decision]) -> list[DecisionRow]:
                 score=round(float(d.confidence), 4),
                 as_of=d.as_of.isoformat(),
                 signals=details,
+                debate=_build_debate(d.inputs.get("debate")),
             )
         )
     return rows
+
+
+def _build_debate(raw: object) -> DebateDetail | None:
+    """Parse `Decision.inputs["debate"]` into a renderable DebateDetail."""
+    if not isinstance(raw, dict):
+        return None
+    try:
+        analysts = [
+            DebateAnalyst(
+                role=str(a.get("role", "?")),
+                direction=str(a.get("direction", "neutral")),  # type: ignore[arg-type]
+                confidence=float(a.get("confidence", 0.0)),
+                evidence=[str(e) for e in a.get("evidence", []) if e],
+                note=str(a.get("note", "")),
+                available=bool(a.get("available", True)),
+            )
+            for a in raw.get("analysts", [])
+            if isinstance(a, dict)
+        ]
+        return DebateDetail(
+            verdict_code=str(raw.get("verdict_code", "MODIFY")),  # type: ignore[arg-type]
+            verdict_why=str(raw.get("verdict_why", "")),
+            conviction=float(raw.get("conviction", 0.0)),
+            conviction_label=str(raw.get("conviction_label", "弱")),
+            bull_case=str(raw.get("bull_case", "")),
+            bear_case=str(raw.get("bear_case", "")),
+            rebuttal=str(raw.get("rebuttal", "")),
+            risk_notes=str(raw.get("risk_notes", "")),
+            dimension_summary=str(raw.get("dimension_summary", "")),
+            analysts=analysts,
+        )
+    except (TypeError, ValueError):
+        return None
 
 
 def build_notices(verdict: GateVerdict, summary: str) -> list[Notice]:

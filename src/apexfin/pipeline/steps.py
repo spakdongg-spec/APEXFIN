@@ -19,6 +19,7 @@ from apexfin.core.enums import GateVerdict, Severity, StepStatus, Tier
 from apexfin.core.models import Decision, SeriesHealth, StepResult
 from apexfin.core.registry import all_strategies
 from apexfin.decision.aggregator import EqualWeightAggregator
+from apexfin.decision.orchestrate import attach_debates
 from apexfin.decision.views import MarketViewImpl
 from apexfin.pipeline.context import RunContext
 from apexfin.pipeline.registry import step
@@ -149,6 +150,10 @@ def decide_step(ctx: RunContext) -> StepResult:
     degraded = ctx.gate_state == GateVerdict.DEGRADED
     aggregator = EqualWeightAggregator(run_id=ctx.run_id, degraded=degraded)
     decisions = aggregator.aggregate(signals, as_of)
+
+    # Per-symbol analyst debate: fills the analysis chain (who said what, the
+    # debate, the PM verdict) into each decision's `inputs` for the dashboard.
+    attach_debates(ctx, decisions, as_of)
 
     decided = {d.symbol for d in decisions}
     specs = ctx.catalog.series(enabled_only=True)

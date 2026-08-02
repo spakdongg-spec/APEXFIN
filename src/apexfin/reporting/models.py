@@ -177,6 +177,8 @@ class DecisionRow(BaseModel):
     as_of: str
     #: Per-strategy breakdown of the aggregate; the visible analysis chain.
     signals: list[SignalDetail] = Field(default_factory=list)
+    #: Bull/bear debate output (AFFIRM/MODIFY/REJECT + cases + analysts).
+    debate: DebateDetail | None = None
 
 
 class SignalDetail(BaseModel):
@@ -188,6 +190,36 @@ class SignalDetail(BaseModel):
     direction: Literal["long", "short", "flat"]
     strength: float = Field(ge=0.0, le=1.0)
     rationale: str
+
+
+class DebateDetail(BaseModel):
+    """The rendered bull/bear debate for one decision (APEXDATA shape)."""
+
+    model_config = _FROZEN
+
+    verdict_code: Literal["AFFIRM", "MODIFY", "REJECT"]
+    verdict_why: str
+    conviction: float = Field(ge=0.0, le=1.0)
+    conviction_label: str
+    bull_case: str
+    bear_case: str
+    rebuttal: str
+    risk_notes: str
+    dimension_summary: str
+    analysts: list[DebateAnalyst] = Field(default_factory=list)
+
+
+class DebateAnalyst(BaseModel):
+    """One analyst role's contribution to the debate, as rendered."""
+
+    model_config = _FROZEN
+
+    role: str
+    direction: Literal["long", "short", "flat", "neutral"]
+    confidence: float = Field(ge=0.0, le=100.0)
+    evidence: list[str] = Field(default_factory=list)
+    note: str = ""
+    available: bool = True
 
 
 class Chart(BaseModel):

@@ -31,7 +31,7 @@ shipping anyone's alpha.
 |---|---|
 | A real-time data pipeline that ships you to Grafana | A pipeline that ships to a *plain HTML file* you can open from `file://` |
 | "Connect Postgres and Prometheus" | A committed SQLite file; offline fixture mode with zero credentials |
-| One built-in strategy you can't read | Three reference strategies with full rationale text and an explicit `BaseStrategy` interface to plug your own in |
+| One built-in strategy you can't read | Six analyst roles (technical / macro + options / COT / text / behavioral interfaces) feeding a bull/bear debate and a PM verdict, with full evidence text |
 | Quality "health" coloured bars | A six-check gate matrix (freshness / completeness / duplicates / consistency / continuity / range) that **blocks** the run and returns exit 4 on `make demo-stale` |
 | "The dashboard is React" | A Jinja2 template + an inline dataclass JSON + an ECharts canvas, vendored locally — no CDN, no build step, no JS framework |
 
@@ -51,7 +51,7 @@ flowchart LR
     end
     subgraph L3[L3 — Pure modules]
         Q[6 quality checks]
-        D[3 reference strategies<br/>+ BaseStrategy interface]
+        D[6 analyst roles +<br/>bull/bear debate + PM verdict]
     end
     subgraph L4[L4 — Pipeline]
         C[collect]
@@ -75,38 +75,56 @@ flowchart LR
 ```
 
 **The infrastructure is the project.** Five layers, each layer only importing
-downward. The decision engine is intentionally a *shape* — three reference
-strategies and an aggregator that surfaces disagreement as `no_call`, not a
-fabricated average. Replace `toy_momentum` with your own strategy, register it
-via `@register_strategy("your_name")`, and the dashboard picks it up.
+downward. The decision engine is intentionally a *shape* — six analyst roles
+and a debate engine that surfaces disagreement as `MODIFY` / `no_call`, not a
+fabricated average. Replace the `technical` analyst with your own implementation
+or wire a real options/CFTC collector into the uncovered roles, and the debate
+engine, PM verdict and dashboard pick it up unchanged.
 
 ---
 
-## The decision layer shape
+## The decision layer: analyst roles + bull/bear debate
 
-Three reference strategies, each with a Chinese-narrative rationale wired all
-the way to the dashboard:
+The decision layer ports the **analyst-role shape** from APEXDATA (a mature
+production system): per-symbol analyst roles emit a direction, a confidence and
+evidence sentences; a bull researcher consolidates the long evidence, a bear
+researcher the short evidence, and a PM adjudicator weighs
+`confidence x role_weight` to emit a single verdict:
 
-- **`toy_momentum`** — 5-day close-to-close return on tradeable assets
-- **`trend_regime`** — fast/slow SMA regime (`long` above, `short` below, `flat` inside ±0.3% band)
-- **`macro_regime`** — reads the macro series (VIX / DGS10 / CPI) and emits a
-  risk-on / risk-off stance applied to every tradeable symbol
+- **`AFFIRM`** — bull evidence dominates by >33pp of weighted share
+- **`REJECT`** — bear evidence dominates by >33pp
+- **`MODIFY`** — evidence is close; the disagreement is stated, not averaged away
 
-Equal-weight aggregation. When strategies disagree, the ledger records a
-`no_call` decision — a **first-class outcome**, not a silent skip. See
-`src/apexfin/decision/aggregator.py` for the rationale.
+Analyst roles shipped (fixture-driven; fork to wire real sources):
+
+| Role | Reads | Ships |
+|---|---|---|
+| `technical` | own price series | momentum + trend-regime fusion |
+| `macro` | VIX / 10Y yield / CPI | risk-on / risk-off regime |
+| `options` | — | interface shape, "未覆盖" until a real option source is wired |
+| `cot` | — | interface shape, "未覆盖" until a COT source is wired |
+| `text` | — | interface shape, "未覆盖" until a news factor is wired |
+| `behavioral` | — | interface shape, "未覆盖" until a behavioural source is wired |
+
+Every decision on the dashboard shows the **full debate**: each analyst's
+stance and evidence, the bull case, the bear case, the rebuttal, risk notes,
+and the verdict — so the reader sees the disagreement, not just the outcome.
 
 ```text
 SPY: 无观点 (no_call)
-  3 个信号等权合成，净分 -0.0201；看多（macro_regime）与看空
-  （toy_momentum、trend_regime）相互抵消，不形成观点。
-    [macro_regime] long  20%  VIX 16.9 低于 20，波动环境温和…
-    [toy_momentum]  short 18%  近 5 日收盘 544.66 → 534.73，区间收益 -1.82%…
-    [trend_regime]  short  8%  SMA5（543.23）在 SMA20（545.36）下方…
+  MODIFY（多空论据接近(多47% vs 空53%)；信念弱；维度：技术面偏空；宏观流动性偏多）
+  [technical] short @46  近 5 日收盘 544.66→534.73，区间收益 -1.82%
+  [macro]     long  @46  VIX 16.9 低于 20，波动环境温和
+  [options/cot/text/behavioral] 未覆盖（接口形状）
+  多头剧本：宏观环境偏风险偏好（risk-on）…
+  空头剧本：技术面动量转弱、SMA5 下穿 SMA20…
+  反驳：多头反驳：宏观流动性论据占优，但技术面指出真实的反向脆弱点…
 ```
 
-This is the **analysis chain** the dashboard exposes per holding. Not a toy
-momentum line — three strategies, three reasons, one verdict.
+The role interface is `AnalystView` (direction / confidence / evidence / note)
+— the same shape APEXDATA uses — so a fork can drop in a real options or COT
+collector and the debate engine, the PM adjudicator and the dashboard all work
+unchanged.
 
 ---
 
@@ -135,7 +153,7 @@ make test && make lint && make typecheck  # verification suite
 |---|---|---|
 | **L1 core** | Contracts, models, enums, frozen clock, error taxonomy | 6 modules |
 | **L2 storage** | SQLite engine, migrations, raw / silver / bronze / health / run / decision repos | 7 modules |
-| **L3** | 6 quality checks + 3 reference strategies + aggregator + base interfaces | 14 modules |
+| **L3** | 6 quality checks + analyst roles + debate engine + aggregator | 16 modules |
 | **L4 pipeline** | 7 steps registered via `@step` with `@step` decorator ParameterSpec generics | 8 modules |
 | **L5 output** | Typer CLI + Jinja2 render + dataclass `DataPack` + JSON schema | 12 modules |
 | **Tests** | 12 tests including 3 regression fixtures for the `demo-stale` contract | 5 files |
@@ -147,7 +165,7 @@ src/apexfin/
 ├── sources/       # L3 collectors (fixture + yahoo)
 ├── processing/    # L3 — bronze/silver builders
 ├── quality/       # L3 — 6 check implementations
-├── decision/      # L3 — base, aggregator, 3 reference strategies
+├── decision/      # L3 — analysts/ (roles) + debate.py (bull/bear/PM) + orchestrator
 ├── accounting/    # L3 — opinion ledger
 ├── pipeline/      # L4 — runner, context, steps, registry, collect
 ├── reporting/     # L5 — datapack, models, render, builders
@@ -155,7 +173,8 @@ src/apexfin/
 ```
 
 Every module is under 300 lines. Every interface uses `Protocol` so a real
-strategy can replace a reference without touching the pipeline.
+analyst can replace a reference without touching the pipeline or the debate
+engine.
 
 ---
 
