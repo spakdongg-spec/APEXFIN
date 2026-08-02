@@ -147,9 +147,9 @@ apexfin quality [--check ID]... [--strict]
 ### `apexfin decide`
 
 ```
-apexfin decide [--strategy NAME] [--horizon-days N]
+apexfin decide [--horizon-days N]
 ```
-默认 `toy_momentum`。gate 为 BLOCKED 时拒绝执行并退 4；DEGRADED 时只对健康 series 产出，其余写 `no_call`。
+运行分析师辩论框架（6 角色 → 多空辩论 → PM 裁决）。gate 为 BLOCKED 时拒绝执行并退 4；DEGRADED 时只对健康 series 产出，其余写 `no_call`。
 
 ### `apexfin render`
 

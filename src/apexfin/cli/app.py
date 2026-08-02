@@ -157,7 +157,6 @@ def quality(
 @app.command("decide")
 def decide(
     ctx: typer.Context,
-    strategy: str = typer.Option("toy_momentum", "--strategy"),
     horizon_days: int = typer.Option(5, "--horizon-days"),
 ) -> None:
     state: CliState = ctx.obj

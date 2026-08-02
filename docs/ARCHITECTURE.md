@@ -63,7 +63,7 @@ APEXDATA 依赖 pandas + numpy + polars + akshare。APEXFIN 全部剔除，理�
 |   sources/     采集适配器（fixture / yahoo / fred）             |
 |   processing/  bronze -> silver 归一与 quality_score            |
 |   quality/     6 类检查 + 新鲜度闸门（治理核心，可独立抄走）     |
-|   decision/    信号与决策抽象 + 玩具参考实现                     |
+|   decision/    6 分析师角色 + 多空辩论 + PM 裁决                   |
 |   analysis/    多角色 prompt 契约 + 确定性 mock provider        |
 |   accounting/  观点对账台账（P1）                               |
 +---------------------------------------------------------------+
@@ -103,7 +103,7 @@ fixture / yahoo / fred
         +--BLOCKED--> 终止 run，退出码 4，decision 不执行
         |
         v (PASS / DEGRADED)
-[decide]   ---> decisions（玩具动量；DEGRADED 时只对健康 series 产出）
+[decide]   ---> decisions（分析师辩论裁决；DEGRADED 时只对健康 series 产出）
         |
         v
 [render]   ---> dist/dashboard.html（单文件；顶部数据健康度区块）
@@ -197,8 +197,9 @@ APEXFIN/
 │   ├── decision/                   # L3 决策骨架（抽 alpha 后）
 │   │   ├── base.py                 # BaseSignal / BaseStrategy 抽象
 │   │   ├── views.py                # MarketView 只读投影（策略的唯一输入）
-│   │   ├── toy_momentum.py         # 玩具参考实现，文件头显式声明非投资建议
-│   │   └── aggregator.py           # 等权聚合，无任何调优参数
+│   │   ├── analysts/              # 6 分析师角色（technical/macro/options/cot/text/behavioral）
+│   │   ├── debate.py               # 多空辩论 + PM 裁决（AFFIRM/MODIFY/REJECT）
+│   │   └── orchestrate.py          # 辩论编排：views -> debate -> decisions
 │   │
 │   ├── analysis/                   # L3 多角色 AI 契约层（P1）
 │   │   ├── roles.py                # 角色卡加载与校验
@@ -442,7 +443,7 @@ freshness = None if lag is None else FreshnessBar(
 | `Extractor` | `core/contracts.py` | `extract(BronzeRecord) -> list[SilverPoint]` | 每个源一个 |
 | `QualityCheck` | `quality/base.py` | `run(QualityContext) -> list[QualityFinding]` | 内置 6 个；可扩展 |
 | `PipelineStep` | `core/contracts.py` | `run(RunContext) -> StepResult`；元数据 `name/tier/depends_on` | 内置步骤；可扩展 |
-| `BaseStrategy` | `decision/base.py` | `generate(MarketView) -> list[Signal]` | 玩具动量；使用者替换 |
+| `BaseStrategy` | `decision/base.py` | `generate(MarketView) -> list[Signal]` | 参考实现（technical/macro）；使用者替换 |
 | `SignalAggregator` | `decision/base.py` | `aggregate(list[Signal]) -> Decision` | 等权实现 |
 | `LLMClient` | `analysis/client.py` | `complete(prompt, role) -> LLMResponse` | mock；使用者接真实 provider |
 | `TradingCalendar` | `core/calendar.py` | `is_trading_day`、`trading_days_between`、`previous_trading_day` | YAML 实现；可替换 |
@@ -634,7 +635,7 @@ make demo
       [collect]  fixture -> bronze_records
       [process]  bronze -> silver_points
       [quality]  6 checks -> findings -> gate: PASS
-      [decide]   toy_momentum -> decisions
+      [decide]   analysts -> debate -> decisions
       [render]   -> dist/dashboard.html
  -> 打印: [PASS] pipeline completed in Xs, dashboard at dist/dashboard.html
 
@@ -701,7 +702,7 @@ S2 采集    sources/base + fixture（含 fresh/stale 两套样本）
 S3 归一    processing/
 S4 治理    quality/ 6 checks + gate + expectations.yaml     <- 差异化核心，投入最多
 S5 编排    pipeline/（manifest + planner + runner + steps）
-S6 决策    decision/（base + views + toy_momentum + aggregator）
+S6 决策    decision/（analysts + debate + orchestrate）
 S7 渲染    reporting/（datapack + templates + sprite + 正常态/降级态）
 S8 CLI     cli/（装配 + 各子命令 + doctor）
 S9 演示    Makefile demo / demo-stale + 端到端测试

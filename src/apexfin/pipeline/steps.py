@@ -12,15 +12,10 @@ duration and records the step; the step itself passes `duration_s=0.0`.
 
 from __future__ import annotations
 
-from datetime import date
-
 from apexfin.accounting.ledger import write_opinion_ledger
 from apexfin.core.enums import GateVerdict, Severity, StepStatus, Tier
-from apexfin.core.models import Decision, SeriesHealth, StepResult
-from apexfin.core.registry import all_strategies
-from apexfin.decision.aggregator import EqualWeightAggregator
-from apexfin.decision.orchestrate import attach_debates
-from apexfin.decision.views import MarketViewImpl
+from apexfin.core.models import SeriesHealth, StepResult
+from apexfin.decision.orchestrate import decide_all
 from apexfin.pipeline.context import RunContext
 from apexfin.pipeline.registry import step
 from apexfin.processing.quality_score import ScoringPolicy
@@ -139,37 +134,12 @@ def decide_step(ctx: RunContext) -> StepResult:
         )
 
     as_of = ctx.clock.today()
-    health_rows = ctx.quality.all_health()
-    healthy = {h.symbol for h in health_rows if h.state == "healthy"}
-
-    view = MarketViewImpl(ctx.silver, ctx.catalog, as_of, frozenset(healthy))
-    signals = []
-    for strategy_cls in all_strategies().values():
-        signals.extend(strategy_cls().generate(view))
 
     degraded = ctx.gate_state == GateVerdict.DEGRADED
-    aggregator = EqualWeightAggregator(run_id=ctx.run_id, degraded=degraded)
-    decisions = aggregator.aggregate(signals, as_of)
+    decisions = decide_all(ctx, ctx.run_id, as_of, degraded)
 
-    # Per-symbol analyst debate: fills the analysis chain (who said what, the
-    # debate, the PM verdict) into each decision's `inputs` for the dashboard.
-    attach_debates(ctx, decisions, as_of)
-
-    decided = {d.symbol for d in decisions}
     specs = ctx.catalog.series(enabled_only=True)
     sym_to_source = {spec.symbol: spec.source_name for spec in specs}
-    for spec in specs:
-        if spec.symbol in decided:
-            continue
-        decisions.append(
-            _no_call(
-                ctx.run_id,
-                as_of,
-                spec.symbol,
-                healthy=spec.symbol in healthy,
-                degraded=degraded,
-            )
-        )
 
     written = 0
     for decision in decisions:
@@ -196,28 +166,4 @@ def decide_step(ctx: RunContext) -> StepResult:
         message=f"wrote {written} decision(s); "
         + ", ".join(f"{name} {int(count)}" for name, count in stances.items() if count),
         metrics={"decisions": float(written), **stances},
-    )
-
-
-def _no_call(run_id: str, as_of: date, symbol: str, *, healthy: bool, degraded: bool) -> Decision:
-    """A symbol the strategies had nothing to say about still gets a row.
-
-    Two different silences, two different rationales: an unhealthy series means
-    the system refused to guess; a healthy one with no signal means it looked
-    and found nothing.
-    """
-    rationale = (
-        "信号强度不足，无明确方向。"
-        if healthy
-        else "数据源不健康，拒绝在陈旧或残缺的序列上给出观点。"
-    )
-    return Decision(
-        run_id=run_id,
-        as_of=as_of,
-        symbol=symbol,
-        stance="no_call",
-        confidence=0.0,
-        strategy="equal_weight",
-        rationale=rationale,
-        degraded=degraded,
     )

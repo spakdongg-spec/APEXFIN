@@ -103,7 +103,7 @@
 | APEXDATA 来源 | APEXFIN 落点 | 保留什么 | 丢弃什么 |
 |--------------|-------------|---------|---------|
 | `decision_core.py`、`decision_bridge.py`、`decision_bridge_canary.py` | `decision/base.py` | `BaseStrategy` / `Signal` / `Decision` 抽象；「策略只吃只读 `MarketView`」的边界设计 | 全部具体判定逻辑、阈值、标的耦合 |
-| `run_dual_momentum.py`、`save_dual_momentum_note.py` | `decision/toy_momentum.py` | 「一个可运行的最简策略示例」这个位置 | 原实现整体不搬；重写为 20 行朴素动量（N 日收益率符号），文件头声明 demonstration only |
+| `run_dual_momentum.py`、`save_dual_momentum_note.py` | `decision/analysts/technical.py` | 「分析师角色」这个位置 | 原实现整体不搬；technical 角色用动量 + 趋势融合的参考计算 |
 | `signal_arbiter.py`、`promote_signals.py`、`evidence_fusion.py`、`evidence_fusion_canary.py`、`signal_registry.py` | `decision/aggregator.py` + `core/registry.py` | 「多信号 -> 单决策」的聚合位置；注册表模式 | 所有权重、优先级、仲裁规则。替换为等权聚合，**刻意不提供任何可调参数**（有参数就有 alpha 嫌疑） |
 | `multi_agent_debate_framework.py`、`multi_agent_debate_v2.py`、`run_multi_agent_debate.py`、`debate_agent_synthesis.py`、`author_debate_agent.py`、`weekly_debate.py`、`synthesize_debate_rule_fallback.py` | `analysis/`（P1） | 角色编排骨架（bull / bear / risk 三段）、结构化输出 schema、「每条论断必须引用具体数据」的铁律 | 真实 LLM 调用、provider key、辩论中的个人观点与偏好；替换为确定性 `MockLLMClient` |
 | `scripts/pipeline/analyst_roles/*.md`（8 个角色卡） | `analysis/prompts/*.md` | 角色定义、证据引用铁律、「数据缺失标未覆盖」约束 | 涉及个人标的偏好、仓位习惯、私有指标名的句子，逐句人工复核 |

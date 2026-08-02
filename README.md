@@ -1,27 +1,36 @@
 # APEXFIN
 
-> A forkable **financial data engineering reference skeleton** — `make demo` and the
-> full pipeline is offline, reproducible, and runs to a static dashboard.
+> A production-shaped **financial data engineering framework** — five layers,
+> a fail-loud quality gate, a six-role analyst debate engine, and an
+> offline-reproducible static dashboard. `make demo` runs the whole chain.
 
 ![APEXFIN dashboard](docs/assets/hero_dashboard.png)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![CI](https://github.com/spakdongg-spec/APEXFIN/actions/workflows/ci.yml/badge.svg)](https://github.com/spakdongg-spec/APEXFIN/actions/workflows/ci.yml)
 [![Python 3.11+](https://img.shields.io/badge/Python-3.11%2B-blue.svg)](pyproject.toml)
 [![Zero CDN](https://img.shields.io/badge/Runtime-Zero%20CDN-2ea44f.svg)](#dashboard)
 [![No emoji](https://img.shields.io/badge/UI-No%20emoji-orange.svg)](#hard-rules)
 [![MIT licensed vendored deps](https://img.shields.io/badge/Vendored-Apache--2.0%20%2F%20ISC-lightgrey.svg)](NOTICE)
 
-APEXFIN is the project you fork when you want to wire a real data pipeline to a
-serious-looking, audit-grade dashboard without spending six months on the
-plumbing. It ships a five-layer architecture, a fail-loud quality gate, an
-explicitly pluggable decision-engine interface, and a static HTML dashboard
-that renders offline from a single JSON datapack.
+APEXFIN is the engineering skeleton behind a production multi-role analyst
+system, distilled into something you can fork in an afternoon. It ships a
+five-layer architecture with a hard "dependencies only point downward" rule, a
+quality gate that **blocks** the run when a series goes stale, a six-role
+analyst framework (technical / macro / options / COT / text / behavioral) that
+debates each holding and emits a PM verdict — and a static HTML dashboard that
+renders fully offline from a single JSON datapack.
 
-It is **not** an investment tool. The included decision layer is three
-deliberately naive reference strategies wired into an equal-weight aggregator
-so the skeleton has the *shape* of a real analysis workflow — multi-strategy
-disagreement, per-strategy rationale, macro-aware regime classification — without
-shipping anyone's alpha.
+The analyst layer is the interesting part. Each role emits a direction, a
+confidence and evidence sentences; a bull researcher consolidates the long
+case, a bear researcher the short case, and the PM adjudicator weighs
+`confidence × role weight` into one verdict: **AFFIRM / MODIFY / REJECT**.
+Disagreement is surfaced, not averaged away — the dashboard shows the full
+debate for every holding, so the reader sees *why*, not just *what*.
+
+It is **not** an investment tool. The reference implementations ship to
+demonstrate the *shape* — real data sources and alpha are the fork's job, and
+the role contract makes that drop-in.
 
 ---
 

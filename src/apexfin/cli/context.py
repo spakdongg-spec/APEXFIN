@@ -8,9 +8,6 @@ register at import time and nothing else in the codebase imports them all.
 
 from __future__ import annotations
 
-import apexfin.decision.macro_regime
-import apexfin.decision.toy_momentum
-import apexfin.decision.trend_regime
 import apexfin.pipeline.collect
 import apexfin.processing.extractors
 import apexfin.quality.check_completeness
@@ -43,7 +40,6 @@ from apexfin.storage.silver_repo import SilverRepository
 #: registries). The tuple makes the imports visibly used so a linter cannot
 #: "fix" them away and silently empty the pipeline.
 _REGISTRATION_MODULES = (
-    apexfin.decision.toy_momentum,
     apexfin.pipeline.collect,
     apexfin.processing.extractors,
     apexfin.quality.check_completeness,

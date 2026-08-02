@@ -21,7 +21,7 @@ PRD AC-4 要求：第三方开发者只读 `BaseCollector` 抽象基类的 docst
 
 采用**双轨**：
 
-- **内置组件**用装饰器注册表：`@register_source("yahoo")`、`@register_check("freshness")`、`@register_strategy("toy_momentum")`、`@step(...)`。在包 import 时完成注册，无魔法，可被静态阅读。
+- **内置组件**用装饰器注册表：`@register_source("yahoo")`、`@register_check("freshness")`、`@register_strategy(...)`、`@step(...)`。在包 import 时完成注册，无魔法，可被静态阅读。
 - **第三方扩展**用 Python entry points，组名 `apexfin.sources`、`apexfin.checks`、`apexfin.strategies`。启动时用 `importlib.metadata.entry_points(group=...)` 发现并加载（Python 3.10+ 的选择器 API，本项目最低 3.11，可直接使用）。
 
 第三方包只需在自己的 `pyproject.toml` 里声明：

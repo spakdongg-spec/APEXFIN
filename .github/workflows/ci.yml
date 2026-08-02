@@ -1,0 +1,90 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: uv sync --frozen --extra dev
+
+      - name: Import smoke (every module imports)
+        run: |
+          .venv/bin/python -c "
+          import pkgutil, importlib, apexfin
+          ok=fail=0; bad=[]
+          for m in pkgutil.walk_packages(apexfin.__path__, 'apexfin.'):
+              try: importlib.import_module(m.name); ok+=1
+              except Exception as e: fail+=1; bad.append((m.name, str(e)[:80]))
+          print(f'OK={ok} FAILED={fail}')
+          assert fail == 0, bad
+          "
+
+      - name: Unit tests
+        run: make test
+
+      - name: Lint (ruff check + format)
+        run: make lint
+
+      - name: Type check (mypy)
+        run: make typecheck
+
+      - name: Line cap (every module <= 300 lines)
+        run: |
+          find src tools tests -name '*.py' -exec wc -l {} + | awk '$1>300 && $2!="total" {print $1, $2; bad=1} END {exit bad}'
+
+      - name: Demo contract — fresh exits 0
+        run: |
+          .venv/bin/python -m apexfin --db /tmp/ci-fresh.db run daily --fixture-pack fresh
+          test -f dist/index.html
+
+      - name: Demo contract — stale exits 4, gate BLOCKED
+        run: |
+          set +e
+          .venv/bin/python -m apexfin --db /tmp/ci-stale.db run daily --fixture-pack stale >/dev/null 2>&1
+          code=$?
+          set -e
+          test "$code" -eq 4
+          .venv/bin/python -c "
+          import sqlite3
+          c = sqlite3.connect('/tmp/ci-stale.db')
+          state = c.execute('SELECT state FROM pipeline_runs ORDER BY started_at DESC LIMIT 1').fetchone()[0]
+          assert state == 'BLOCKED', f'expected BLOCKED, got {state}'
+          "
+
+      - name: P0 red-line scan (emoji / purple-pink gradient)
+        run: |
+          .venv/bin/python - <<'PY'
+          import pathlib, re
+          emoji = re.compile(r'[\U0001F300-\U0001F9FF\U00002600-\U000026FF\U00002700-\U000027BF\U0000FE0F]')
+          hits = []
+          for root in ('templates', 'static', 'src'):
+              for p in pathlib.Path(root).rglob('*'):
+                  if p.is_file() and p.suffix in ('.html', '.css', '.js', '.py'):
+                      text = p.read_text(encoding='utf-8', errors='ignore')
+                      if emoji.search(text) or re.search(r'7C3AED|A855F7|EC4899', text, re.I):
+                          hits.append(str(p))
+          assert not hits, f'P0 red-line hits: {hits}'
+          print('P0 red-line scan: clean')
+          PY
+
+      - name: Upload dashboard artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dashboard
+          path: dist/index.html
+          retention-days: 7
