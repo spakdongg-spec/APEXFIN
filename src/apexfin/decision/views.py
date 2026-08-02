@@ -46,6 +46,10 @@ class MarketViewImpl:
     def symbols(self) -> tuple[str, ...]:
         return tuple(self._by_symbol)
 
+    def domain_of(self, symbol: str) -> str | None:
+        spec = self._by_symbol.get(symbol)
+        return None if spec is None else spec.domain
+
     def is_healthy(self, symbol: str) -> bool:
         return symbol in self._healthy
 

@@ -8,7 +8,9 @@ register at import time and nothing else in the codebase imports them all.
 
 from __future__ import annotations
 
+import apexfin.decision.macro_regime
 import apexfin.decision.toy_momentum
+import apexfin.decision.trend_regime
 import apexfin.pipeline.collect
 import apexfin.processing.extractors
 import apexfin.quality.check_completeness

@@ -183,6 +183,366 @@
       "event_time": "2026-08-07T12:00:00Z",
       "value": 3.44,
       "unit": "percent"
+    },
+    {
+      "symbol": "DGS10",
+      "event_time": "2026-06-26T12:00:00Z",
+      "value": 4.06,
+      "unit": "percent"
+    },
+    {
+      "symbol": "DGS10",
+      "event_time": "2026-06-29T12:00:00Z",
+      "value": 4.08,
+      "unit": "percent"
+    },
+    {
+      "symbol": "DGS10",
+      "event_time": "2026-06-30T12:00:00Z",
+      "value": 4.1,
+      "unit": "percent"
+    },
+    {
+      "symbol": "DGS10",
+      "event_time": "2026-07-01T12:00:00Z",
+      "value": 4.02,
+      "unit": "percent"
+    },
+    {
+      "symbol": "DGS10",
+      "event_time": "2026-07-02T12:00:00Z",
+      "value": 3.96,
+      "unit": "percent"
+    },
+    {
+      "symbol": "DGS10",
+      "event_time": "2026-07-06T12:00:00Z",
+      "value": 4.03,
+      "unit": "percent"
+    },
+    {
+      "symbol": "DGS10",
+      "event_time": "2026-07-07T12:00:00Z",
+      "value": 3.98,
+      "unit": "percent"
+    },
+    {
+      "symbol": "DGS10",
+      "event_time": "2026-07-08T12:00:00Z",
+      "value": 3.91,
+      "unit": "percent"
+    },
+    {
+      "symbol": "DGS10",
+      "event_time": "2026-07-09T12:00:00Z",
+      "value": 3.94,
+      "unit": "percent"
+    },
+    {
+      "symbol": "DGS10",
+      "event_time": "2026-07-10T12:00:00Z",
+      "value": 3.95,
+      "unit": "percent"
+    },
+    {
+      "symbol": "DGS10",
+      "event_time": "2026-07-13T12:00:00Z",
+      "value": 3.96,
+      "unit": "percent"
+    },
+    {
+      "symbol": "DGS10",
+      "event_time": "2026-07-14T12:00:00Z",
+      "value": 3.94,
+      "unit": "percent"
+    },
+    {
+      "symbol": "DGS10",
+      "event_time": "2026-07-15T12:00:00Z",
+      "value": 4.01,
+      "unit": "percent"
+    },
+    {
+      "symbol": "DGS10",
+      "event_time": "2026-07-16T12:00:00Z",
+      "value": 3.93,
+      "unit": "percent"
+    },
+    {
+      "symbol": "DGS10",
+      "event_time": "2026-07-17T12:00:00Z",
+      "value": 3.92,
+      "unit": "percent"
+    },
+    {
+      "symbol": "DGS10",
+      "event_time": "2026-07-20T12:00:00Z",
+      "value": 3.91,
+      "unit": "percent"
+    },
+    {
+      "symbol": "DGS10",
+      "event_time": "2026-07-21T12:00:00Z",
+      "value": 3.99,
+      "unit": "percent"
+    },
+    {
+      "symbol": "DGS10",
+      "event_time": "2026-07-22T12:00:00Z",
+      "value": 4.04,
+      "unit": "percent"
+    },
+    {
+      "symbol": "DGS10",
+      "event_time": "2026-07-23T12:00:00Z",
+      "value": 3.97,
+      "unit": "percent"
+    },
+    {
+      "symbol": "DGS10",
+      "event_time": "2026-07-24T12:00:00Z",
+      "value": 3.97,
+      "unit": "percent"
+    },
+    {
+      "symbol": "DGS10",
+      "event_time": "2026-07-27T12:00:00Z",
+      "value": 4.05,
+      "unit": "percent"
+    },
+    {
+      "symbol": "DGS10",
+      "event_time": "2026-07-28T12:00:00Z",
+      "value": 4.09,
+      "unit": "percent"
+    },
+    {
+      "symbol": "DGS10",
+      "event_time": "2026-07-29T12:00:00Z",
+      "value": 4.03,
+      "unit": "percent"
+    },
+    {
+      "symbol": "DGS10",
+      "event_time": "2026-07-30T12:00:00Z",
+      "value": 4.06,
+      "unit": "percent"
+    },
+    {
+      "symbol": "DGS10",
+      "event_time": "2026-07-31T12:00:00Z",
+      "value": 4.02,
+      "unit": "percent"
+    },
+    {
+      "symbol": "DGS10",
+      "event_time": "2026-08-03T12:00:00Z",
+      "value": 3.99,
+      "unit": "percent"
+    },
+    {
+      "symbol": "DGS10",
+      "event_time": "2026-08-04T12:00:00Z",
+      "value": 3.94,
+      "unit": "percent"
+    },
+    {
+      "symbol": "DGS10",
+      "event_time": "2026-08-05T12:00:00Z",
+      "value": 3.98,
+      "unit": "percent"
+    },
+    {
+      "symbol": "DGS10",
+      "event_time": "2026-08-06T12:00:00Z",
+      "value": 3.9,
+      "unit": "percent"
+    },
+    {
+      "symbol": "DGS10",
+      "event_time": "2026-08-07T12:00:00Z",
+      "value": 3.96,
+      "unit": "percent"
+    },
+    {
+      "symbol": "VIX",
+      "event_time": "2026-06-26T12:00:00Z",
+      "value": 16.5,
+      "unit": "percent"
+    },
+    {
+      "symbol": "VIX",
+      "event_time": "2026-06-29T12:00:00Z",
+      "value": 16.57,
+      "unit": "percent"
+    },
+    {
+      "symbol": "VIX",
+      "event_time": "2026-06-30T12:00:00Z",
+      "value": 16.51,
+      "unit": "percent"
+    },
+    {
+      "symbol": "VIX",
+      "event_time": "2026-07-01T12:00:00Z",
+      "value": 16.58,
+      "unit": "percent"
+    },
+    {
+      "symbol": "VIX",
+      "event_time": "2026-07-02T12:00:00Z",
+      "value": 16.52,
+      "unit": "percent"
+    },
+    {
+      "symbol": "VIX",
+      "event_time": "2026-07-06T12:00:00Z",
+      "value": 16.52,
+      "unit": "percent"
+    },
+    {
+      "symbol": "VIX",
+      "event_time": "2026-07-07T12:00:00Z",
+      "value": 16.48,
+      "unit": "percent"
+    },
+    {
+      "symbol": "VIX",
+      "event_time": "2026-07-08T12:00:00Z",
+      "value": 16.54,
+      "unit": "percent"
+    },
+    {
+      "symbol": "VIX",
+      "event_time": "2026-07-09T12:00:00Z",
+      "value": 16.57,
+      "unit": "percent"
+    },
+    {
+      "symbol": "VIX",
+      "event_time": "2026-07-10T12:00:00Z",
+      "value": 16.58,
+      "unit": "percent"
+    },
+    {
+      "symbol": "VIX",
+      "event_time": "2026-07-13T12:00:00Z",
+      "value": 16.58,
+      "unit": "percent"
+    },
+    {
+      "symbol": "VIX",
+      "event_time": "2026-07-14T12:00:00Z",
+      "value": 16.65,
+      "unit": "percent"
+    },
+    {
+      "symbol": "VIX",
+      "event_time": "2026-07-15T12:00:00Z",
+      "value": 16.66,
+      "unit": "percent"
+    },
+    {
+      "symbol": "VIX",
+      "event_time": "2026-07-16T12:00:00Z",
+      "value": 16.65,
+      "unit": "percent"
+    },
+    {
+      "symbol": "VIX",
+      "event_time": "2026-07-17T12:00:00Z",
+      "value": 16.57,
+      "unit": "percent"
+    },
+    {
+      "symbol": "VIX",
+      "event_time": "2026-07-20T12:00:00Z",
+      "value": 16.63,
+      "unit": "percent"
+    },
+    {
+      "symbol": "VIX",
+      "event_time": "2026-07-21T12:00:00Z",
+      "value": 16.61,
+      "unit": "percent"
+    },
+    {
+      "symbol": "VIX",
+      "event_time": "2026-07-22T12:00:00Z",
+      "value": 16.58,
+      "unit": "percent"
+    },
+    {
+      "symbol": "VIX",
+      "event_time": "2026-07-23T12:00:00Z",
+      "value": 16.61,
+      "unit": "percent"
+    },
+    {
+      "symbol": "VIX",
+      "event_time": "2026-07-24T12:00:00Z",
+      "value": 16.61,
+      "unit": "percent"
+    },
+    {
+      "symbol": "VIX",
+      "event_time": "2026-07-27T12:00:00Z",
+      "value": 16.68,
+      "unit": "percent"
+    },
+    {
+      "symbol": "VIX",
+      "event_time": "2026-07-28T12:00:00Z",
+      "value": 16.71,
+      "unit": "percent"
+    },
+    {
+      "symbol": "VIX",
+      "event_time": "2026-07-29T12:00:00Z",
+      "value": 16.77,
+      "unit": "percent"
+    },
+    {
+      "symbol": "VIX",
+      "event_time": "2026-07-30T12:00:00Z",
+      "value": 16.82,
+      "unit": "percent"
+    },
+    {
+      "symbol": "VIX",
+      "event_time": "2026-07-31T12:00:00Z",
+      "value": 16.83,
+      "unit": "percent"
+    },
+    {
+      "symbol": "VIX",
+      "event_time": "2026-08-03T12:00:00Z",
+      "value": 16.88,
+      "unit": "percent"
+    },
+    {
+      "symbol": "VIX",
+      "event_time": "2026-08-04T12:00:00Z",
+      "value": 16.9,
+      "unit": "percent"
+    },
+    {
+      "symbol": "VIX",
+      "event_time": "2026-08-05T12:00:00Z",
+      "value": 16.94,
+      "unit": "percent"
+    },
+    {
+      "symbol": "VIX",
+      "event_time": "2026-08-06T12:00:00Z",
+      "value": 16.92,
+      "unit": "percent"
+    },
+    {
+      "symbol": "VIX",
+      "event_time": "2026-08-07T12:00:00Z",
+      "value": 16.92,
+      "unit": "percent"
     }
   ]
 }

@@ -22,6 +22,14 @@ sources:
         label: Apple Inc. (offline sample)
         unit: usd
         tier: risk_essential
+      - id: SPY
+        label: SPDR S&P 500 ETF (offline sample)
+        unit: usd
+        tier: risk_essential
+      - id: QQQ
+        label: Invesco QQQ ETF (offline sample)
+        unit: usd
+        tier: risk_essential
 
   - name: fixture_macro
     domain: macro
@@ -35,4 +43,12 @@ sources:
       - id: CPI
         label: US CPI YoY percent change (offline sample)
         unit: percent
+        tier: support
+      - id: DGS10
+        label: US 10Y Treasury yield (offline sample)
+        unit: percent
+        tier: support
+      - id: VIX
+        label: CBOE Volatility Index (offline sample)
+        unit: index
         tier: support

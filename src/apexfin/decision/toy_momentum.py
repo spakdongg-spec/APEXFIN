@@ -38,6 +38,11 @@ class ToyMomentum(BaseStrategy):
             if not view.is_healthy(symbol):
                 # is_healthy already checked -- but be explicit and never guess.
                 continue
+            # Momentum is a directional claim on a tradeable asset. Macro
+            # readings (CPI, yields, VIX) are not tradeable here -- emitting a
+            # long/short signal on them would be a fabricated view.
+            if view.domain_of(symbol) != "equity":
+                continue
             points = view.series(symbol, lookback=10)
             if len(points) < 2:
                 continue

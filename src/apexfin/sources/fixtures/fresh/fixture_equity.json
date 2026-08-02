@@ -303,6 +303,606 @@
       "close": 227.2,
       "volume": 55216927,
       "unit": "usd"
+    },
+    {
+      "symbol": "SPY",
+      "event_time": "2026-06-18T20:00:00Z",
+      "open": 543.05,
+      "high": 548.11,
+      "low": 533.64,
+      "close": 539.27,
+      "volume": 58543258,
+      "unit": "usd"
+    },
+    {
+      "symbol": "SPY",
+      "event_time": "2026-06-22T20:00:00Z",
+      "open": 540.16,
+      "high": 552.69,
+      "low": 537.85,
+      "close": 546.39,
+      "volume": 39354064,
+      "unit": "usd"
+    },
+    {
+      "symbol": "SPY",
+      "event_time": "2026-06-23T20:00:00Z",
+      "open": 546.31,
+      "high": 553.48,
+      "low": 543.61,
+      "close": 550.12,
+      "volume": 43957028,
+      "unit": "usd"
+    },
+    {
+      "symbol": "SPY",
+      "event_time": "2026-06-24T20:00:00Z",
+      "open": 550.56,
+      "high": 552.72,
+      "low": 540.08,
+      "close": 541.55,
+      "volume": 53684747,
+      "unit": "usd"
+    },
+    {
+      "symbol": "SPY",
+      "event_time": "2026-06-25T20:00:00Z",
+      "open": 542.43,
+      "high": 546.55,
+      "low": 531.36,
+      "close": 536.17,
+      "volume": 40142362,
+      "unit": "usd"
+    },
+    {
+      "symbol": "SPY",
+      "event_time": "2026-06-26T20:00:00Z",
+      "open": 536.07,
+      "high": 540.84,
+      "low": 527.92,
+      "close": 530.87,
+      "volume": 43083603,
+      "unit": "usd"
+    },
+    {
+      "symbol": "SPY",
+      "event_time": "2026-06-29T20:00:00Z",
+      "open": 531.43,
+      "high": 533.61,
+      "low": 527.02,
+      "close": 528.2,
+      "volume": 38499347,
+      "unit": "usd"
+    },
+    {
+      "symbol": "SPY",
+      "event_time": "2026-06-30T20:00:00Z",
+      "open": 529.18,
+      "high": 541.81,
+      "low": 528.29,
+      "close": 536.57,
+      "volume": 61363829,
+      "unit": "usd"
+    },
+    {
+      "symbol": "SPY",
+      "event_time": "2026-07-01T20:00:00Z",
+      "open": 535.21,
+      "high": 545.85,
+      "low": 534.25,
+      "close": 542.56,
+      "volume": 53190131,
+      "unit": "usd"
+    },
+    {
+      "symbol": "SPY",
+      "event_time": "2026-07-02T20:00:00Z",
+      "open": 543.11,
+      "high": 545.63,
+      "low": 534.55,
+      "close": 540.54,
+      "volume": 49559898,
+      "unit": "usd"
+    },
+    {
+      "symbol": "SPY",
+      "event_time": "2026-07-06T20:00:00Z",
+      "open": 539.99,
+      "high": 542.12,
+      "low": 528.35,
+      "close": 531.95,
+      "volume": 41379928,
+      "unit": "usd"
+    },
+    {
+      "symbol": "SPY",
+      "event_time": "2026-07-07T20:00:00Z",
+      "open": 531.66,
+      "high": 535.44,
+      "low": 526.6,
+      "close": 528.69,
+      "volume": 46605121,
+      "unit": "usd"
+    },
+    {
+      "symbol": "SPY",
+      "event_time": "2026-07-08T20:00:00Z",
+      "open": 529.26,
+      "high": 539.74,
+      "low": 526.14,
+      "close": 538.17,
+      "volume": 50254222,
+      "unit": "usd"
+    },
+    {
+      "symbol": "SPY",
+      "event_time": "2026-07-09T20:00:00Z",
+      "open": 539.18,
+      "high": 553.36,
+      "low": 533.83,
+      "close": 547.36,
+      "volume": 44035454,
+      "unit": "usd"
+    },
+    {
+      "symbol": "SPY",
+      "event_time": "2026-07-10T20:00:00Z",
+      "open": 545.92,
+      "high": 551.02,
+      "low": 542.04,
+      "close": 544.1,
+      "volume": 43718860,
+      "unit": "usd"
+    },
+    {
+      "symbol": "SPY",
+      "event_time": "2026-07-13T20:00:00Z",
+      "open": 543.43,
+      "high": 544.29,
+      "low": 536.56,
+      "close": 542.32,
+      "volume": 64450311,
+      "unit": "usd"
+    },
+    {
+      "symbol": "SPY",
+      "event_time": "2026-07-14T20:00:00Z",
+      "open": 544.15,
+      "high": 549.76,
+      "low": 537.65,
+      "close": 539.54,
+      "volume": 64874599,
+      "unit": "usd"
+    },
+    {
+      "symbol": "SPY",
+      "event_time": "2026-07-15T20:00:00Z",
+      "open": 540.54,
+      "high": 548.3,
+      "low": 539.09,
+      "close": 547.02,
+      "volume": 66724381,
+      "unit": "usd"
+    },
+    {
+      "symbol": "SPY",
+      "event_time": "2026-07-16T20:00:00Z",
+      "open": 547.38,
+      "high": 552.15,
+      "low": 544.53,
+      "close": 551.16,
+      "volume": 40008652,
+      "unit": "usd"
+    },
+    {
+      "symbol": "SPY",
+      "event_time": "2026-07-17T20:00:00Z",
+      "open": 553.01,
+      "high": 554.97,
+      "low": 551.51,
+      "close": 552.88,
+      "volume": 64233503,
+      "unit": "usd"
+    },
+    {
+      "symbol": "SPY",
+      "event_time": "2026-07-20T20:00:00Z",
+      "open": 554.56,
+      "high": 561.47,
+      "low": 549.96,
+      "close": 555.17,
+      "volume": 61879208,
+      "unit": "usd"
+    },
+    {
+      "symbol": "SPY",
+      "event_time": "2026-07-21T20:00:00Z",
+      "open": 553.13,
+      "high": 562.57,
+      "low": 546.72,
+      "close": 559.06,
+      "volume": 60367297,
+      "unit": "usd"
+    },
+    {
+      "symbol": "SPY",
+      "event_time": "2026-07-22T20:00:00Z",
+      "open": 560.1,
+      "high": 564.78,
+      "low": 550.79,
+      "close": 555.97,
+      "volume": 42180641,
+      "unit": "usd"
+    },
+    {
+      "symbol": "SPY",
+      "event_time": "2026-07-23T20:00:00Z",
+      "open": 555.05,
+      "high": 560.57,
+      "low": 550.14,
+      "close": 552.98,
+      "volume": 53383868,
+      "unit": "usd"
+    },
+    {
+      "symbol": "SPY",
+      "event_time": "2026-07-24T20:00:00Z",
+      "open": 554.42,
+      "high": 558.04,
+      "low": 538.5,
+      "close": 544.66,
+      "volume": 44883092,
+      "unit": "usd"
+    },
+    {
+      "symbol": "SPY",
+      "event_time": "2026-07-27T20:00:00Z",
+      "open": 545.19,
+      "high": 553.38,
+      "low": 540.1,
+      "close": 546.89,
+      "volume": 63831991,
+      "unit": "usd"
+    },
+    {
+      "symbol": "SPY",
+      "event_time": "2026-07-28T20:00:00Z",
+      "open": 546.02,
+      "high": 550.33,
+      "low": 544.57,
+      "close": 548.84,
+      "volume": 54622214,
+      "unit": "usd"
+    },
+    {
+      "symbol": "SPY",
+      "event_time": "2026-07-29T20:00:00Z",
+      "open": 548.03,
+      "high": 550.6,
+      "low": 540.91,
+      "close": 544.96,
+      "volume": 61955450,
+      "unit": "usd"
+    },
+    {
+      "symbol": "SPY",
+      "event_time": "2026-07-30T20:00:00Z",
+      "open": 544.61,
+      "high": 549.8,
+      "low": 539.43,
+      "close": 540.74,
+      "volume": 41070111,
+      "unit": "usd"
+    },
+    {
+      "symbol": "SPY",
+      "event_time": "2026-07-31T20:00:00Z",
+      "open": 542.43,
+      "high": 548.69,
+      "low": 532.45,
+      "close": 534.73,
+      "volume": 48973671,
+      "unit": "usd"
+    },
+    {
+      "symbol": "QQQ",
+      "event_time": "2026-06-18T20:00:00Z",
+      "open": 470.1,
+      "high": 474.54,
+      "low": 462.6,
+      "close": 463.8,
+      "volume": 38063992,
+      "unit": "usd"
+    },
+    {
+      "symbol": "QQQ",
+      "event_time": "2026-06-22T20:00:00Z",
+      "open": 462.95,
+      "high": 466.76,
+      "low": 459.97,
+      "close": 465.12,
+      "volume": 59660273,
+      "unit": "usd"
+    },
+    {
+      "symbol": "QQQ",
+      "event_time": "2026-06-23T20:00:00Z",
+      "open": 465.78,
+      "high": 470.94,
+      "low": 455.38,
+      "close": 457.74,
+      "volume": 39446826,
+      "unit": "usd"
+    },
+    {
+      "symbol": "QQQ",
+      "event_time": "2026-06-24T20:00:00Z",
+      "open": 458.0,
+      "high": 461.93,
+      "low": 452.61,
+      "close": 460.94,
+      "volume": 66014190,
+      "unit": "usd"
+    },
+    {
+      "symbol": "QQQ",
+      "event_time": "2026-06-25T20:00:00Z",
+      "open": 460.99,
+      "high": 461.6,
+      "low": 450.92,
+      "close": 453.0,
+      "volume": 39566677,
+      "unit": "usd"
+    },
+    {
+      "symbol": "QQQ",
+      "event_time": "2026-06-26T20:00:00Z",
+      "open": 451.79,
+      "high": 456.38,
+      "low": 442.22,
+      "close": 446.87,
+      "volume": 47715666,
+      "unit": "usd"
+    },
+    {
+      "symbol": "QQQ",
+      "event_time": "2026-06-29T20:00:00Z",
+      "open": 445.58,
+      "high": 448.88,
+      "low": 444.88,
+      "close": 445.83,
+      "volume": 52394967,
+      "unit": "usd"
+    },
+    {
+      "symbol": "QQQ",
+      "event_time": "2026-06-30T20:00:00Z",
+      "open": 445.44,
+      "high": 450.56,
+      "low": 438.77,
+      "close": 440.43,
+      "volume": 44131335,
+      "unit": "usd"
+    },
+    {
+      "symbol": "QQQ",
+      "event_time": "2026-07-01T20:00:00Z",
+      "open": 441.15,
+      "high": 445.68,
+      "low": 438.52,
+      "close": 441.23,
+      "volume": 59898121,
+      "unit": "usd"
+    },
+    {
+      "symbol": "QQQ",
+      "event_time": "2026-07-02T20:00:00Z",
+      "open": 440.68,
+      "high": 450.6,
+      "low": 439.88,
+      "close": 447.13,
+      "volume": 52771301,
+      "unit": "usd"
+    },
+    {
+      "symbol": "QQQ",
+      "event_time": "2026-07-06T20:00:00Z",
+      "open": 448.0,
+      "high": 456.18,
+      "low": 442.69,
+      "close": 454.31,
+      "volume": 63691090,
+      "unit": "usd"
+    },
+    {
+      "symbol": "QQQ",
+      "event_time": "2026-07-07T20:00:00Z",
+      "open": 455.73,
+      "high": 459.36,
+      "low": 443.16,
+      "close": 448.11,
+      "volume": 43243408,
+      "unit": "usd"
+    },
+    {
+      "symbol": "QQQ",
+      "event_time": "2026-07-08T20:00:00Z",
+      "open": 449.76,
+      "high": 458.18,
+      "low": 445.78,
+      "close": 455.54,
+      "volume": 51268649,
+      "unit": "usd"
+    },
+    {
+      "symbol": "QQQ",
+      "event_time": "2026-07-09T20:00:00Z",
+      "open": 455.86,
+      "high": 458.06,
+      "low": 445.93,
+      "close": 450.8,
+      "volume": 45847434,
+      "unit": "usd"
+    },
+    {
+      "symbol": "QQQ",
+      "event_time": "2026-07-10T20:00:00Z",
+      "open": 451.21,
+      "high": 459.12,
+      "low": 448.63,
+      "close": 456.72,
+      "volume": 64875294,
+      "unit": "usd"
+    },
+    {
+      "symbol": "QQQ",
+      "event_time": "2026-07-13T20:00:00Z",
+      "open": 456.09,
+      "high": 462.75,
+      "low": 454.02,
+      "close": 460.94,
+      "volume": 43683826,
+      "unit": "usd"
+    },
+    {
+      "symbol": "QQQ",
+      "event_time": "2026-07-14T20:00:00Z",
+      "open": 461.76,
+      "high": 467.34,
+      "low": 458.31,
+      "close": 465.18,
+      "volume": 41905851,
+      "unit": "usd"
+    },
+    {
+      "symbol": "QQQ",
+      "event_time": "2026-07-15T20:00:00Z",
+      "open": 467.04,
+      "high": 469.29,
+      "low": 462.85,
+      "close": 467.06,
+      "volume": 49431681,
+      "unit": "usd"
+    },
+    {
+      "symbol": "QQQ",
+      "event_time": "2026-07-16T20:00:00Z",
+      "open": 466.76,
+      "high": 473.09,
+      "low": 462.15,
+      "close": 468.51,
+      "volume": 53798494,
+      "unit": "usd"
+    },
+    {
+      "symbol": "QQQ",
+      "event_time": "2026-07-17T20:00:00Z",
+      "open": 470.37,
+      "high": 477.68,
+      "low": 465.01,
+      "close": 473.82,
+      "volume": 58371762,
+      "unit": "usd"
+    },
+    {
+      "symbol": "QQQ",
+      "event_time": "2026-07-20T20:00:00Z",
+      "open": 474.9,
+      "high": 476.88,
+      "low": 463.53,
+      "close": 466.35,
+      "volume": 54849786,
+      "unit": "usd"
+    },
+    {
+      "symbol": "QQQ",
+      "event_time": "2026-07-21T20:00:00Z",
+      "open": 468.1,
+      "high": 476.0,
+      "low": 465.23,
+      "close": 472.94,
+      "volume": 38669758,
+      "unit": "usd"
+    },
+    {
+      "symbol": "QQQ",
+      "event_time": "2026-07-22T20:00:00Z",
+      "open": 472.94,
+      "high": 477.58,
+      "low": 465.57,
+      "close": 466.95,
+      "volume": 55655530,
+      "unit": "usd"
+    },
+    {
+      "symbol": "QQQ",
+      "event_time": "2026-07-23T20:00:00Z",
+      "open": 466.01,
+      "high": 471.57,
+      "low": 462.87,
+      "close": 464.24,
+      "volume": 67644787,
+      "unit": "usd"
+    },
+    {
+      "symbol": "QQQ",
+      "event_time": "2026-07-24T20:00:00Z",
+      "open": 464.75,
+      "high": 467.66,
+      "low": 454.69,
+      "close": 458.2,
+      "volume": 44429824,
+      "unit": "usd"
+    },
+    {
+      "symbol": "QQQ",
+      "event_time": "2026-07-27T20:00:00Z",
+      "open": 458.62,
+      "high": 462.06,
+      "low": 448.73,
+      "close": 452.53,
+      "volume": 53185902,
+      "unit": "usd"
+    },
+    {
+      "symbol": "QQQ",
+      "event_time": "2026-07-28T20:00:00Z",
+      "open": 450.88,
+      "high": 453.67,
+      "low": 441.73,
+      "close": 443.13,
+      "volume": 47637739,
+      "unit": "usd"
+    },
+    {
+      "symbol": "QQQ",
+      "event_time": "2026-07-29T20:00:00Z",
+      "open": 442.38,
+      "high": 450.19,
+      "low": 438.42,
+      "close": 446.03,
+      "volume": 45536038,
+      "unit": "usd"
+    },
+    {
+      "symbol": "QQQ",
+      "event_time": "2026-07-30T20:00:00Z",
+      "open": 447.1,
+      "high": 448.65,
+      "low": 439.17,
+      "close": 441.06,
+      "volume": 58282393,
+      "unit": "usd"
+    },
+    {
+      "symbol": "QQQ",
+      "event_time": "2026-07-31T20:00:00Z",
+      "open": 441.05,
+      "high": 441.81,
+      "low": 437.49,
+      "close": 439.37,
+      "volume": 39780478,
+      "unit": "usd"
     }
   ]
 }

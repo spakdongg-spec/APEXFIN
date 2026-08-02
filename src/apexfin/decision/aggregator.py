@@ -73,6 +73,18 @@ class EqualWeightAggregator:
                 "signal_count": float(len(signals)),
                 "long_count": float(sum(1 for s in signals if s.direction == "long")),
                 "short_count": float(sum(1 for s in signals if s.direction == "short")),
+                # Per-strategy breakdown: the visible analysis chain behind the
+                # aggregate. Each entry keeps direction/strength/rationale so
+                # the dashboard can render the disagreement, not just the verdict.
+                "signals": [
+                    {
+                        "strategy": s.strategy,
+                        "direction": s.direction,
+                        "strength": round(abs(float(s.strength)), 4),
+                        "rationale": s.rationale,
+                    }
+                    for s in sorted(signals, key=lambda x: x.strategy)
+                ],
             },
             contributing_signals=contributors,
             degraded=self.degraded,

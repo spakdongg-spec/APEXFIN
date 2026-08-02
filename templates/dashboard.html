@@ -171,6 +171,21 @@
             </div>
             <div class="decision__body">
               <div class="decision__rationale">{{ d.rationale }}</div>
+              {% if d.signals %}
+              <ul class="decision__signals">
+                {% for s in d.signals %}
+                <li class="sig" data-d="{{ s.direction }}">
+                  <span class="sig__head">
+                    <span class="sig__name">{{ s.strategy }}</span>
+                    <span class="sig__dir" data-d="{{ s.direction }}">{{ '看多' if s.direction == 'long' else ('看空' if s.direction == 'short' else '中性') }}</span>
+                    <span class="sig__bar"><span class="sig__fill" style="width:{{ (s.strength * 100) | round }}%"></span></span>
+                    <span class="sig__str num">{{ (s.strength * 100) | round }}%</span>
+                  </span>
+                  <span class="sig__why">{{ s.rationale }}</span>
+                </li>
+                {% endfor %}
+              </ul>
+              {% endif %}
               <div class="decision__foot">得分 <span class="num">{{ d.score }}</span> · 截至 {{ d.as_of }} · {{ d.decision_id }}</div>
             </div>
           </div>

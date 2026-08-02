@@ -14,7 +14,7 @@ from typing import Any
 from apexfin.core.clock import parse_utc, to_utc_iso
 from apexfin.core.enums import STANCE_PRESENTATION, GateVerdict
 from apexfin.core.models import Decision
-from apexfin.reporting.models import DecisionRow, Notice, RunFooter, StepRow
+from apexfin.reporting.models import DecisionRow, Notice, RunFooter, SignalDetail, StepRow
 from apexfin.reporting.state_maps import STATUS_PRESENTATION
 
 _UNKNOWN_STATUS = ("未知", "circle-dashed")
@@ -65,10 +65,30 @@ def build_decisions(decisions: Sequence[Decision]) -> list[DecisionRow]:
     A `no_call` renders with a flat arrow -- there is nowhere else for it to
     point -- but its label says 无观点, not 中性. Those are different claims and
     the table has to keep them apart.
+
+    Each row also carries the per-strategy `signals` breakdown the aggregator
+    stored in `inputs["signals"]`, so the board shows the analysis chain (which
+    strategy said what) instead of only the aggregate verdict.
     """
     rows: list[DecisionRow] = []
     for index, d in enumerate(decisions):
         direction, label = STANCE_PRESENTATION.get(d.stance, ("flat", "中性"))
+        raw_signals = d.inputs.get("signals", [])
+        details: list[SignalDetail] = []
+        for raw in raw_signals:
+            if not isinstance(raw, dict):
+                continue
+            try:
+                details.append(
+                    SignalDetail(
+                        strategy=str(raw.get("strategy", "?")),
+                        direction=str(raw.get("direction", "flat")),  # type: ignore[arg-type]
+                        strength=float(raw.get("strength", 0.0)),
+                        rationale=str(raw.get("rationale", "")),
+                    )
+                )
+            except (TypeError, ValueError):
+                continue
         rows.append(
             DecisionRow(
                 decision_id=f"d-{index + 1:03d}",
@@ -78,6 +98,7 @@ def build_decisions(decisions: Sequence[Decision]) -> list[DecisionRow]:
                 rationale=d.rationale,
                 score=round(float(d.confidence), 4),
                 as_of=d.as_of.isoformat(),
+                signals=details,
             )
         )
     return rows

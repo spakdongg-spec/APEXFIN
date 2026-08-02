@@ -175,6 +175,19 @@ class DecisionRow(BaseModel):
     rationale: str
     score: float = Field(ge=0.0, le=1.0)
     as_of: str
+    #: Per-strategy breakdown of the aggregate; the visible analysis chain.
+    signals: list[SignalDetail] = Field(default_factory=list)
+
+
+class SignalDetail(BaseModel):
+    """One strategy's contribution to a decision, as rendered on the board."""
+
+    model_config = _FROZEN
+
+    strategy: str
+    direction: Literal["long", "short", "flat"]
+    strength: float = Field(ge=0.0, le=1.0)
+    rationale: str
 
 
 class Chart(BaseModel):

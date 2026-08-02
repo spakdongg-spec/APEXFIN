@@ -206,6 +206,18 @@ tr[data-d="down"] td { background: var(--mkt-down-wash); }
 .decision__sym b { font: var(--weight-announce) var(--text-md)/1 var(--font-data); color: var(--fg); }
 .decision__body { min-width: 0; }
 .decision__rationale { font-size: var(--text-sm); color: var(--fg-2); }
+.decision__signals { list-style: none; margin: var(--space-2) 0 0; padding: 0; display: grid; gap: var(--space-1); }
+.sig { display: grid; gap: 2px; padding: var(--space-2); border: 1px solid var(--border-soft); border-radius: var(--radius-sm); background: var(--surface-2); }
+.sig__head { display: flex; align-items: center; gap: var(--space-2); }
+.sig__name { font: var(--weight-emph) var(--text-2xs)/1 var(--font-data); color: var(--fg); text-transform: uppercase; letter-spacing: var(--tracking-caps); min-width: 110px; }
+.sig__dir { font: var(--weight-emph) var(--text-2xs)/1 var(--font-data); }
+.sig__dir[data-d="long"] { color: var(--mkt-up); }
+.sig__dir[data-d="short"] { color: var(--mkt-down); }
+.sig__dir[data-d="flat"] { color: var(--meta); }
+.sig__bar { flex: 1; height: 4px; border-radius: var(--radius-pill); background: var(--border-soft); overflow: hidden; max-width: 120px; }
+.sig__fill { display: block; height: 100%; background: var(--muted); }
+.sig__str { font: var(--weight-read) var(--text-2xs)/1 var(--font-data); color: var(--meta); min-width: 34px; text-align: right; }
+.sig__why { font-size: var(--text-2xs); color: var(--meta); line-height: var(--leading-data); }
 .decision__foot { margin-top: 4px; font: var(--weight-read) var(--text-2xs)/1.2 var(--font-data); color: var(--meta); }
 
 /* ---- Charts --------------------------------------------------------------- */

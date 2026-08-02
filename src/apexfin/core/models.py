@@ -201,7 +201,7 @@ class Decision(BaseModel):
     confidence: float = Field(ge=0.0, le=1.0)
     strategy: str
     rationale: str
-    inputs: dict[str, float] = Field(default_factory=dict)
+    inputs: dict[str, Any] = Field(default_factory=dict)
     contributing_signals: tuple[str, ...] = ()
     degraded: bool = False
 
